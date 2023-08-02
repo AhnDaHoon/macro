@@ -1,0 +1,41 @@
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '2.7.14'
+	id 'io.spring.dependency-management' version '1.0.15.RELEASE'
+}
+
+group = 'web'
+version = '0.0.1-SNAPSHOT'
+
+java {
+	sourceCompatibility = '1.8'
+}
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation group: 'org.seleniumhq.selenium', name: 'selenium-java', version: '4.10.0'
+	implementation group: 'io.github.bonigarcia', name: 'webdrivermanager', version: '5.3.3'
+	implementation group: 'org.apache.httpcomponents.client5', name: 'httpclient5', version: '5.2.1'
+	compileOnly 'org.projectlombok:lombok'
+	testCompileOnly 'org.projectlombok:lombok'
+	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+	annotationProcessor 'org.projectlombok:lombok'
+	testAnnotationProcessor 'org.projectlombok:lombok'
+	testImplementation("io.github.bonigarcia:webdrivermanager:5.3.3")
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
