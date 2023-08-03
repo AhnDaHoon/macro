@@ -1,24 +1,26 @@
 package com.macro.selenium;
 
-import io.github.bonigarcia.wdm.WebDriverManager;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
-
-import java.time.Duration;
+import org.openqa.selenium.manager.SeleniumManager;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+/**
+ * 크롬 연결 테스트
+ */
 public class ChromeTest {
+
     WebDriver driver;
 
     @BeforeAll
     static void setupClass() {
-        WebDriverManager.chromedriver().setup();
+        String chPath = SeleniumManager.getInstance().getDriverPath("chromedriver");
+        System.out.println("chPath = " + chPath);
     }
 
     @BeforeEach
