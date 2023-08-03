@@ -1,4 +1,4 @@
-package web.macro;
+package com.macro;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

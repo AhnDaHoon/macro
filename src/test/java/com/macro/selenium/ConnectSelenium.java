@@ -1,4 +1,4 @@
-package web.macro.selenium;
+package com.macro.selenium;
 
 import lombok.RequiredArgsConstructor;
 import org.openqa.selenium.WebDriver;
@@ -13,8 +13,6 @@ public class ConnectSelenium {
     private WebDriver webDriver;
     private WebElement webElement;
     private String url = "https://www.google.com/";
-
-
 
     public void start(){
         System.setProperty(seleniumProperties.getWebDriverId(), seleniumProperties.getWebDriverPath());

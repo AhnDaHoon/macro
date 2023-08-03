@@ -1,4 +1,4 @@
-package web.macro.selenium;
+package com.macro.selenium;
 
 
 import lombok.Data;
