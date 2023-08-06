@@ -6,8 +6,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.manager.SeleniumManager;
+import io.github.bonigarcia.wdm.WebDriverManager;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -20,10 +19,7 @@ public class ChromeTest {
 
     @BeforeAll
     static void setupClass() {
-        ChromeOptions co = new ChromeOptions();
-        co.setBrowserVersion("Stable");
-        String chPath = SeleniumManager.getInstance().getDriverPath(co, false).getDriverPath();
-        System.out.println("chPath = " + chPath);
+        WebDriverManager.chromedriver().setup();
     }
 
     @BeforeEach
