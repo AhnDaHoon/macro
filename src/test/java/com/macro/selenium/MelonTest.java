@@ -1,5 +1,6 @@
 package com.macro.selenium;
 
+import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.*;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -25,9 +26,7 @@ import static org.openqa.selenium.support.ui.ExpectedConditions.*;
 @SpringBootTest
 public class MelonTest {
 
-    String parentWindowHandle;
-
-    Set<String> newWindowHandles;
+    MelonTiket melonTiket = new MelonTiket();
 
     WebDriver driver;
 
@@ -35,19 +34,10 @@ public class MelonTest {
 
     Wait<WebDriver> wait;
 
-    @BeforeAll
-    static void setupClass() {
-    }
-
     @BeforeEach
     void setupTest() {
-        ChromeOptions options = new ChromeOptions();
-        options.addArguments("--disable-popup-blocking");
-        driver = new ChromeDriver(options);
-
-        wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-
-
+        driver = melonTiket.getMainDriver();
+        wait = melonTiket.getWaitDriver();
     }
 
     @AfterEach
@@ -69,60 +59,38 @@ public class MelonTest {
     }
 
     @Test
-    void 멜론_티켓_카카오_계정_로그인_버튼_클릭() throws InterruptedException {
+    void 멜론_티켓_로그인_페이지_이동(){
         MelonInfo melonInfo = new MelonInfo.MelonInfoBuilder()
                 .url("https://member.melon.com/muid/family/ticket/login/web/login_inform.htm?cpId=WP15&returnPage=https://ticket.melon.com/main/readingGate.htm")
                 .loginType(LoginTypeEnum.KAKAO)
                 .build();
         driver.get(melonInfo.getUrl());
-        String title = driver.getTitle();
-        assertThat(title).contains("Melon::음악이 필요한 순간, 멜론");
-        parentWindowHandle = driver.getWindowHandle();
+    }
 
-        element = driver.findElement(By.className("kakao"));
-        element.click();
-        int usePageNumber = melonInfo.getLoginType().getUsePageNumber();
-        windowHandler(usePageNumber); // 카카오 계정 로그인 버튼을 누르면 새탭을 생성하기 때문에 2번째 탭으로 전환
+    @Test
+    void 멜론_티켓_카카오_계정_로그인_버튼_클릭() throws InterruptedException {
+        MelonInfo melonInfo = melonTiket.moveMelonLoginForm(LoginTypeEnum.KAKAO, element, melonTiket);
 
         String newUrl = driver.getCurrentUrl();
         assertThat(newUrl).contains("https://accounts.kakao.com/login");
     }
     @Test
     void 멜론_티켓_멜론_아이디_로그인_버튼_클릭(){
-        MelonInfo melonInfo = new MelonInfo.MelonInfoBuilder()
-                .url("https://member.melon.com/muid/family/ticket/login/web/login_inform.htm?cpId=WP15&returnPage=https://ticket.melon.com/main/readingGate.htm")
-                .loginType(LoginTypeEnum.MELON)
-                .build();
-        driver.get(melonInfo.getUrl());
-        String title = driver.getTitle();
-        assertThat(title).contains("Melon::음악이 필요한 순간, 멜론");
-        parentWindowHandle = driver.getWindowHandle();
-
-        element = driver.findElement(By.className("melon"));
-        element.click();
-        int usePageNumber = melonInfo.getLoginType().getUsePageNumber();
-        windowHandler(usePageNumber);
+        MelonInfo melonInfo = melonTiket.moveMelonLoginForm(LoginTypeEnum.MELON, element, melonTiket);
 
         String newUrl = driver.getCurrentUrl();
         assertThat(newUrl).contains("https://member.melon.com/muid/family/ticket/login/web/login_informM.htm");
-
     }
 
     @Test
-    void 멜론_티켓_로그인(){}
+    void 멜론_티켓_카카오_아이디_로그인(){
 
-    void windowHandler(int usePageNumber){
-        wait.until(numberOfWindowsToBe(usePageNumber));
-        newWindowHandles = driver.getWindowHandles();
-
-        // 새로운 창으로 전환
-        for (String nwh : newWindowHandles) {
-            if (!nwh.equals(parentWindowHandle)) {
-                driver.switchTo().window(nwh);
-                break;
-            }
-        }
     }
+    @Test
+    void 멜론_티켓_멜론_아이디_로그인(){
+
+    }
+
 
 }
 
