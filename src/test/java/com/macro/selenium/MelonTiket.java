@@ -1,5 +1,7 @@
 package com.macro.selenium;
 
+import com.macro.selenium.config.LoginTypeEnum;
+import com.macro.selenium.config.MelonConfig;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -50,11 +52,10 @@ public class MelonTiket {
     /**
      * 파라미터가 여러개 있으면 결합도가 높음 수정이 필요함
      * @param loginTypeEnum
-     * @param element
      * @param melonTiket
      * @return
      */
-    MelonInfo moveMelonLoginForm(LoginTypeEnum loginTypeEnum, WebElement element, MelonTiket melonTiket){
+    public MelonInfo moveMelonLoginForm(LoginTypeEnum loginTypeEnum, MelonTiket melonTiket){
         MelonInfo melonInfo = new MelonInfo.MelonInfoBuilder()
                 .url("https://member.melon.com/muid/family/ticket/login/web/login_inform.htm?cpId=WP15&returnPage=https://ticket.melon.com/main/readingGate.htm")
                 .loginType(loginTypeEnum)
@@ -62,11 +63,10 @@ public class MelonTiket {
         driver.get(melonInfo.getUrl());
 
         switch (loginTypeEnum){
-            case KAKAO -> element = driver.findElement(By.className("kakao"));
-            case MELON -> element = driver.findElement(By.className("melon"));
+            case KAKAO -> driver.findElement(By.className("kakao")).click();
+            case MELON -> driver.findElement(By.className("melon")).click();
         }
 
-        element.click();
         int usePageNumber = melonInfo.getLoginType().getUsePageNumber();
         melonTiket.windowHandler(usePageNumber);
         return melonInfo;

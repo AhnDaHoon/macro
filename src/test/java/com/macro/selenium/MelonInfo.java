@@ -1,10 +1,12 @@
 package com.macro.selenium;
 
-import lombok.Builder;
-import lombok.Data;
-import lombok.ToString;
+import com.macro.selenium.config.LoginTypeEnum;
+import lombok.*;
 
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @ToString
 @Builder
 public class MelonInfo {
@@ -15,4 +17,5 @@ public class MelonInfo {
     private String url;
 
     private LoginTypeEnum loginType;
+
 }
