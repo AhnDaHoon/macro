@@ -57,8 +57,11 @@ public class MelonTest {
 
     @Test
     void 멜론_티켓_URL_연결() {
-        String url = "https://ticket.melon.com/main/index.htm";
-        driver.get(url);
+        MelonInfo melonInfo = new MelonInfo.MelonInfoBuilder()
+                .url("https://ticket.melon.com/main/index.htm")
+                .build();
+
+        driver.get(melonInfo.getUrl());
         String title = driver.getTitle();
 
         // Verify
@@ -67,30 +70,38 @@ public class MelonTest {
 
     @Test
     void 멜론_티켓_카카오_계정_로그인_버튼_클릭() throws InterruptedException {
-        String url = "https://member.melon.com/muid/family/ticket/login/web/login_inform.htm?cpId=WP15&returnPage=https://ticket.melon.com/main/readingGate.htm";
-        driver.get(url);
+        MelonInfo melonInfo = new MelonInfo.MelonInfoBuilder()
+                .url("https://member.melon.com/muid/family/ticket/login/web/login_inform.htm?cpId=WP15&returnPage=https://ticket.melon.com/main/readingGate.htm")
+                .loginType(LoginTypeEnum.KAKAO)
+                .build();
+        driver.get(melonInfo.getUrl());
         String title = driver.getTitle();
         assertThat(title).contains("Melon::음악이 필요한 순간, 멜론");
         parentWindowHandle = driver.getWindowHandle();
 
         element = driver.findElement(By.className("kakao"));
         element.click();
-        windowHandler(2); // 카카오 계정 로그인 버튼을 누르면 새탭을 생성하기 때문에 2번째 탭으로 전환
+        int usePageNumber = melonInfo.getLoginType().getUsePageNumber();
+        windowHandler(usePageNumber); // 카카오 계정 로그인 버튼을 누르면 새탭을 생성하기 때문에 2번째 탭으로 전환
 
         String newUrl = driver.getCurrentUrl();
         assertThat(newUrl).contains("https://accounts.kakao.com/login");
     }
     @Test
     void 멜론_티켓_멜론_아이디_로그인_버튼_클릭(){
-        String url = "https://member.melon.com/muid/family/ticket/login/web/login_inform.htm?cpId=WP15&returnPage=https://ticket.melon.com/main/readingGate.htm";
-        driver.get(url);
+        MelonInfo melonInfo = new MelonInfo.MelonInfoBuilder()
+                .url("https://member.melon.com/muid/family/ticket/login/web/login_inform.htm?cpId=WP15&returnPage=https://ticket.melon.com/main/readingGate.htm")
+                .loginType(LoginTypeEnum.MELON)
+                .build();
+        driver.get(melonInfo.getUrl());
         String title = driver.getTitle();
         assertThat(title).contains("Melon::음악이 필요한 순간, 멜론");
         parentWindowHandle = driver.getWindowHandle();
 
         element = driver.findElement(By.className("melon"));
         element.click();
-        windowHandler(1);
+        int usePageNumber = melonInfo.getLoginType().getUsePageNumber();
+        windowHandler(usePageNumber);
 
         String newUrl = driver.getCurrentUrl();
         assertThat(newUrl).contains("https://member.melon.com/muid/family/ticket/login/web/login_informM.htm");
