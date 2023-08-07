@@ -49,12 +49,6 @@ public class MelonTiket {
         }
     }
 
-    /**
-     * 파라미터가 여러개 있으면 결합도가 높음 수정이 필요함
-     * @param loginTypeEnum
-     * @param melonTiket
-     * @return
-     */
     public MelonInfo moveMelonLoginForm(LoginTypeEnum loginTypeEnum, MelonTiket melonTiket){
         MelonInfo melonInfo = new MelonInfo.MelonInfoBuilder()
                 .url("https://member.melon.com/muid/family/ticket/login/web/login_inform.htm?cpId=WP15&returnPage=https://ticket.melon.com/main/readingGate.htm")
