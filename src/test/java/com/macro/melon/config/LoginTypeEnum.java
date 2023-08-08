@@ -1,4 +1,4 @@
-package com.macro.selenium.config;
+package com.macro.melon.config;
 
 
 import lombok.Getter;

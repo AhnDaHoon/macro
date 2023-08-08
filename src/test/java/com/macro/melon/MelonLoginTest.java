@@ -1,12 +1,14 @@
-package com.macro.selenium;
+package com.macro.melon;
 
-import com.macro.selenium.config.LoginTypeEnum;
+import com.macro.melon.config.LoginTypeEnum;
 import org.junit.jupiter.api.*;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Wait;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -16,7 +18,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest
 public class MelonLoginTest {
 
-    MelonTiket melonTiket = new MelonTiket();
+    @Value("#{melonId}")
+    private String id;
+
+    @Value("#{melonPwd}")
+    private String pwd;
+
+    MelonTicket melonTicket = new MelonTicket();
 
     WebDriver driver;
 
@@ -26,8 +34,8 @@ public class MelonLoginTest {
 
     @BeforeEach
     void setupTest() {
-        driver = melonTiket.getMainDriver();
-        wait = melonTiket.getWaitDriver();
+        driver = melonTicket.getMainDriver();
+        wait = melonTicket.getWaitDriver();
     }
 
     @AfterEach
@@ -59,14 +67,14 @@ public class MelonLoginTest {
 
     @Test
     void 멜론_티켓_카카오_계정_로그인_버튼_클릭() throws InterruptedException {
-        MelonInfo melonInfo = melonTiket.moveMelonLoginForm(LoginTypeEnum.KAKAO, melonTiket);
+        MelonInfo melonInfo = melonTicket.moveMelonLoginPage(LoginTypeEnum.KAKAO, melonTicket);
 
         String newUrl = driver.getCurrentUrl();
         assertThat(newUrl).contains("https://accounts.kakao.com/login");
     }
     @Test
     void 멜론_티켓_멜론_아이디_로그인_버튼_클릭(){
-        MelonInfo melonInfo = melonTiket.moveMelonLoginForm(LoginTypeEnum.MELON, melonTiket);
+        MelonInfo melonInfo = melonTicket.moveMelonLoginPage(LoginTypeEnum.MELON, melonTicket);
 
         String newUrl = driver.getCurrentUrl();
         assertThat(newUrl).contains("https://member.melon.com/muid/family/ticket/login/web/login_informM.htm");
@@ -74,9 +82,9 @@ public class MelonLoginTest {
 
     @Test
     void 멜론_티켓_카카오_아이디_로그인(){
-        MelonInfo melonInfo = melonTiket.moveMelonLoginForm(LoginTypeEnum.KAKAO, melonTiket);
-        melonInfo.setId("id");
-        melonInfo.setPwd("pwd");
+        MelonInfo melonInfo = melonTicket.moveMelonLoginPage(LoginTypeEnum.KAKAO, melonTicket);
+        melonInfo.setId(id);
+        melonInfo.setPwd(pwd);
 
         driver.findElement(By.id("loginId--1")).sendKeys(melonInfo.getId());
         driver.findElement(By.id("password--2")).sendKeys(melonInfo.getPwd());
@@ -88,9 +96,12 @@ public class MelonLoginTest {
     }
     @Test
     void 멜론_티켓_멜론_아이디_로그인(){
-        MelonInfo melonInfo = melonTiket.moveMelonLoginForm(LoginTypeEnum.MELON, melonTiket);
-        melonInfo.setId("id");
-        melonInfo.setPwd("pwd");
+        MelonInfo melonInfo = melonTicket.moveMelonLoginPage(LoginTypeEnum.MELON, melonTicket);
+        melonInfo.setId(id);
+        melonInfo.setPwd(pwd);
+
+        System.out.println("id = " + id);
+        System.out.println("pwd = " + pwd);
 
         driver.findElement(By.id("id")).sendKeys(melonInfo.getId());
         driver.findElement(By.id("pwd")).sendKeys(melonInfo.getPwd());

@@ -1,10 +1,9 @@
-package com.macro.selenium;
+package com.macro.melon;
 
-import com.macro.selenium.config.LoginTypeEnum;
-import com.macro.selenium.config.MelonConfig;
+import com.macro.melon.config.LoginTypeEnum;
+import com.macro.melon.config.MelonConfig;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Wait;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
@@ -15,7 +14,7 @@ import java.util.Set;
 import static org.openqa.selenium.support.ui.ExpectedConditions.numberOfWindowsToBe;
 
 @Component
-public class MelonTiket {
+public class MelonTicket {
 
     private AnnotationConfigApplicationContext ct = new AnnotationConfigApplicationContext(MelonConfig.class);
 
@@ -49,7 +48,7 @@ public class MelonTiket {
         }
     }
 
-    public MelonInfo moveMelonLoginForm(LoginTypeEnum loginTypeEnum, MelonTiket melonTiket){
+    public MelonInfo moveMelonLoginPage(LoginTypeEnum loginTypeEnum, MelonTicket melonTicket){
         MelonInfo melonInfo = new MelonInfo.MelonInfoBuilder()
                 .url("https://member.melon.com/muid/family/ticket/login/web/login_inform.htm?cpId=WP15&returnPage=https://ticket.melon.com/main/readingGate.htm")
                 .loginType(loginTypeEnum)
@@ -62,7 +61,7 @@ public class MelonTiket {
         }
 
         int usePageNumber = melonInfo.getLoginType().getUsePageNumber();
-        melonTiket.windowHandler(usePageNumber);
+        melonTicket.windowHandler(usePageNumber);
         return melonInfo;
     }
 

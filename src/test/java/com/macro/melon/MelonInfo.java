@@ -1,6 +1,6 @@
-package com.macro.selenium;
+package com.macro.melon;
 
-import com.macro.selenium.config.LoginTypeEnum;
+import com.macro.melon.config.LoginTypeEnum;
 import lombok.*;
 
 @Getter

@@ -1,10 +1,8 @@
-package com.macro.selenium.config;
+package com.macro.melon.config;
 
-import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.support.ui.Wait;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,7 +22,7 @@ public class MelonConfig {
 
     @Bean
     public WebDriverWait getWaitDriver() {
-        return new WebDriverWait(getMainDriver(), Duration.ofSeconds(10));
+        return new WebDriverWait(getMainDriver(), Duration.ofSeconds(60*60*3), Duration.ofMillis(150));
     }
 
 }
