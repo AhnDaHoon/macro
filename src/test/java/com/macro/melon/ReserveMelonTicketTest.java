@@ -10,9 +10,11 @@ import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Wait;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
@@ -23,6 +25,12 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 @SpringBootTest
 public class ReserveMelonTicketTest {
+
+    @Value("#{melonId}")
+    private String id;
+
+    @Value("#{melonPwd}")
+    private String pwd;
 
     MelonTicket melonTicket = new MelonTicket();
 
@@ -38,9 +46,6 @@ public class ReserveMelonTicketTest {
     String prodId = "208510";
     // 예매할 티켓의 날짜
     String ticketdate = "20230909";
-
-//    String prodId = "208169";
-//    String ticketdate = "20230812";
 
     // 예매할 시간 첫번 째는 0번
     int ticketTime = 0;
@@ -58,71 +63,140 @@ public class ReserveMelonTicketTest {
 //    }
 
     @Test
-    void 멜론_티켓_예매_사이트_이동(){
+    void 예매_사이트_이동(){
         melonLogin();
     }
 
     @Test
-    void 멜론_티켓_팝업이_있을_때_제거_클릭(){
+    void 팝업이_있을_때_제거_클릭(){
         melonLogin();
     }
 
     @Test
-    void 멜론_티켓_리스트_날짜_선택(){
+    void 리스트_날짜_선택(){
         prodId = "208510";
-        ticketdate = "20230909";
+        MelonInfo melonInfo = new MelonInfo.MelonInfoBuilder()
+                .tagId("dateSelect_")
+                .ticketdate("20230909")
+                .melonTicket(melonTicket)
+                .build();
         melonLogin();
 
-        selectDate("dateSelect_");
+        melonTicket.selectDate(melonInfo);
     }
 
     @Test
-    void 멜론_티켓_캘린더_날짜_선택(){
+    void 캘린더_날짜_선택(){
         prodId = "208169";
-        ticketdate = "20230812";
+        MelonInfo melonInfo = new MelonInfo.MelonInfoBuilder()
+                .tagId("calendar_SelectId_")
+                .ticketdate("20230812")
+                .melonTicket(melonTicket)
+                .build();
+
         melonLogin();
 
-        selectDate("calendar_SelectId_");
+        melonTicket.selectDate(melonInfo);
     }
 
     @Test
-    void 멜론_티켓_리스트_시간_선택(){
+    void 리스트_시간_선택(){
         prodId = "208510";
-        ticketdate = "20230909";
+
+        MelonInfo melonInfo = new MelonInfo.MelonInfoBuilder()
+                .tagId("dateSelect_")
+                .ticketdate("20230909")
+                .ticketTime(0)
+                .melonTicket(melonTicket)
+                .build();
+
         melonLogin();
 
-        selectDate("dateSelect_");
+        melonTicket.selectDate(melonInfo);
 
-        selectTime();
+        melonTicket.selectTime(melonInfo);
     }
 
     @Test
-    void 멜론_티켓_캘린더_시간_선택(){
+    void 캘린더_시간_선택(){
         prodId = "208169";
-        ticketdate = "20230812";
+
+        MelonInfo melonInfo = new MelonInfo.MelonInfoBuilder()
+                .tagId("calendar_SelectId_")
+                .ticketdate("20230812")
+                .ticketTime(0)
+                .melonTicket(melonTicket)
+                .build();
+
         melonLogin();
 
-        selectDate("calendar_SelectId_");
+        melonTicket.selectDate(melonInfo);
 
-        selectTime();
+        melonTicket.selectTime(melonInfo);
+
     }
 
 
     @Test
-    void 멜론_티켓_예매하기_버튼_클릭(){
+    void 예매하기_버튼_클릭(){
         prodId = "208510";
-        ticketdate = "20230909";
+
+        MelonInfo melonInfo = new MelonInfo.MelonInfoBuilder()
+                .tagId("dateSelect_")
+                .ticketdate("20230909")
+                .ticketTime(0)
+                .melonTicket(melonTicket)
+                .build();
+
         melonLogin();
 
-        selectDate("dateSelect_");
+        melonTicket.selectDate(melonInfo);
+
+        melonTicket.selectTime(melonInfo);
 
         driver.findElement(By.id("ticketReservation_Btn")).click();
+
+        melonTicket.newPage();
+
+        melonTicket.windowHandler(2);
+        String currentUrl = driver.getCurrentUrl();
+        while (currentUrl.equals("about:blank")){
+            currentUrl = driver.getCurrentUrl();
+        }
+
+        System.out.println("currentUrl = " + currentUrl);
+        assertThat(currentUrl).contains("https://ticket.melon.com/reservation/popup/onestop.htm");
+        
+        
+//        String asds = melonTicket.findClass("box_consert").getText();
+//        System.out.println("asds = " + asds);
+//        String titSTxtProdName = melonTicket.findClass("txt_prod_name").getText();
+//        System.out.println("titSTxtProdName = " + titSTxtProdName);
+    }
+
+    /**
+     * 좌석 선택까지 완료하고 작업
+     */
+    @Test
+    void 캡쳐_이미지_자동_입력(){
+
+    }
+
+    @Test
+    void 좌석_선택(){
+//        prodId = "208510";
+//        ticketdate = "20230909";
+//        melonLogin();
+//
+//        selectDate("dateSelect_");
+//
+//        driver.findElement(By.id("ticketReservation_Btn")).click();
     }
 
     void melonLogin(){
         MelonInfo melonInfo = melonTicket.moveMelonLoginPage(LoginTypeEnum.MELON, melonTicket);
-        melonInfo.setId("id");
-        melonInfo.setPwd("pwd");
+        melonInfo.setId(id);
+        melonInfo.setPwd(pwd);
 
         driver.findElement(By.id("id")).sendKeys(melonInfo.getId());
         driver.findElement(By.id("pwd")).sendKeys(melonInfo.getPwd());
@@ -141,21 +215,4 @@ public class ReserveMelonTicketTest {
         }
     }
 
-    void selectDate(String tagId){
-        element = driver.findElement(By.id(tagId+ticketdate));
-        System.out.println("element = " + element);
-        element.click();
-    }
-
-    void selectTime(){
-        // 날짜의 선택의 경우 여러 개여서 List로 받는다.
-        List<WebElement> itemTimeList = driver.findElements(By.className("item_time"));
-        while (itemTimeList.size() == 0){
-            System.out.println("실패" );
-            itemTimeList = driver.findElements(By.className("item_time"));
-        }
-        System.out.println("itemTimeList = " + itemTimeList);
-        itemTimeList.get(ticketTime).click();
-
-    }
 }

@@ -2,6 +2,7 @@ package com.macro.melon;
 
 import com.macro.melon.config.LoginTypeEnum;
 import lombok.*;
+import org.openqa.selenium.WebElement;
 
 @Getter
 @Setter
@@ -17,5 +18,15 @@ public class MelonInfo {
     private String url;
 
     private LoginTypeEnum loginType;
+
+    private MelonTicket melonTicket;
+
+    private int ticketTime;
+
+    private String ticketdate;
+
+    private String tagId;
+
+    private WebElement element;
 
 }
