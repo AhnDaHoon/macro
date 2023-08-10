@@ -17,7 +17,6 @@ public class MelonConfig {
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--disable-popup-blocking");
         WebDriver driver = new ChromeDriver(options);
-//        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(60*60*3));
         return driver;
     }
 

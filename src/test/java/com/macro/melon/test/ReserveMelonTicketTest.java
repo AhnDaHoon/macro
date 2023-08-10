@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Wait;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -36,8 +37,6 @@ public class ReserveMelonTicketTest {
     MelonInfo melonInfo;
 
     WebDriver driver;
-
-    WebElement element;
 
     Wait<WebDriver> wait;
 
@@ -142,7 +141,7 @@ public class ReserveMelonTicketTest {
 
         melonTicket.findId("ticketReservation_Btn").click();
 
-        melonTicket.newPage();
+        wait.until(ExpectedConditions.numberOfWindowsToBe(2));
 
         melonTicket.windowHandler(2);
         String currentUrl = driver.getCurrentUrl();
@@ -165,13 +164,10 @@ public class ReserveMelonTicketTest {
 
         melonTicket.findId("ticketReservation_Btn").click();
 
-        melonTicket.newPage();
-
+        wait.until(ExpectedConditions.numberOfWindowsToBe(2));
         melonTicket.windowHandler(2);
-        String currentUrl = driver.getCurrentUrl();
-        while (currentUrl.equals("about:blank")){
-            currentUrl = driver.getCurrentUrl();
-        }
+
+        System.out.println("새로운 페이지 감지");
 
         WebElement oneStopFrame = melonTicket.findFrame("oneStopFrame");
         melonTicket.switchFrame(oneStopFrame);
