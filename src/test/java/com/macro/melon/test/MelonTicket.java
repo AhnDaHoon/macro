@@ -137,6 +137,18 @@ public class MelonTicket {
         return driver.findElements(by);
     }
 
+    public List<WebElement> findTagList(String name){
+        By by = By.tagName(name);
+        waitElement(by);
+        return driver.findElements(by);
+    }
+
+    public WebElement findFrame(String name){
+        By by = By.id(name);
+        waitElement(by);
+        return driver.findElement(by);
+    }
+
     // 새로운 페이지가 감지될 때까지 while 문 돌리는 메서드, 메서드명 고민 중...
     public void newPage (){
         boolean isNotFound = true;
@@ -156,6 +168,10 @@ public class MelonTicket {
         } catch (Exception e) {
             System.out.println("요소가 나타나지 않거나 대기 중에 오류가 발생했습니다.");
         }
+    }
+
+    public void switchFrame(WebElement iframe){
+        driver.switchTo().frame(iframe);
     }
 
 }
