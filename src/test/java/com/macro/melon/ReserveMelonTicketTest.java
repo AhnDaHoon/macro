@@ -12,6 +12,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Wait;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.PropertySource;
 
 import java.util.List;
 import java.util.Set;
@@ -24,12 +25,13 @@ import static org.junit.jupiter.api.Assertions.*;
  *
  */
 @SpringBootTest
+@PropertySource("classpath:test.yml")
 public class ReserveMelonTicketTest {
 
-    @Value("#{melonId}")
+    @Value("${melonId}")
     private String id;
 
-    @Value("#{melonPwd}")
+    @Value("${melonPwd}")
     private String pwd;
 
     MelonTicket melonTicket = new MelonTicket();

@@ -8,7 +8,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Wait;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
+import org.springframework.context.annotation.PropertySource;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -16,12 +16,13 @@ import static org.assertj.core.api.Assertions.assertThat;
  * 멜론 티켓 연결 테스트
  */
 @SpringBootTest
+@PropertySource("classpath:test.yml")
 public class MelonLoginTest {
 
-    @Value("#{melonId}")
+    @Value("${melonId}")
     private String id;
 
-    @Value("#{melonPwd}")
+    @Value("${melonPwd}")
     private String pwd;
 
     MelonTicket melonTicket = new MelonTicket();
