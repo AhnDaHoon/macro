@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.Set;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.openqa.selenium.support.ui.ExpectedConditions.numberOfWindowsToBe;
 
 @Component
@@ -49,14 +50,10 @@ public class MelonTicket {
         }
     }
 
-    public MelonInfo moveMelonLoginPage(LoginTypeEnum loginTypeEnum, MelonTicket melonTicket){
-        MelonInfo melonInfo = new MelonInfo.MelonInfoBuilder()
-                .url("https://member.melon.com/muid/family/ticket/login/web/login_inform.htm?cpId=WP15&returnPage=https://ticket.melon.com/main/readingGate.htm")
-                .loginType(loginTypeEnum)
-                .build();
-        driver.get(melonInfo.getUrl());
+    private void moveMelonLoginPage(MelonInfo melonInfo){
+        driver.get(melonInfo.getLoginUrl());
 
-        switch (loginTypeEnum){
+        switch (melonInfo.getLoginType()){
             case KAKAO -> {
                 WebElement kakaoBtn = findClass("kakao");
                 kakaoBtn.click();
@@ -68,8 +65,35 @@ public class MelonTicket {
         }
 
         int usePageNumber = melonInfo.getLoginType().getUsePageNumber();
-        melonTicket.windowHandler(usePageNumber);
-        return melonInfo;
+        windowHandler(usePageNumber);
+    }
+
+    public void melonLogin(MelonInfo melonInfo){
+        moveMelonLoginPage(melonInfo);
+
+        WebElement id = findId("id");
+        WebElement pwd = findId("pwd");
+        id.sendKeys(melonInfo.getId());
+        pwd.sendKeys(melonInfo.getPwd());
+        WebElement btnLogin = findId("btnLogin");
+        btnLogin.click();
+
+        WebElement btnLogout = findId("btnLogout");
+        String logout = btnLogout.getText();
+        assertThat(logout).contains("로그아웃");
+
+        String reserveTicketUrl = melonInfo.getReserveTicketUrl();
+        String prodId = melonInfo.getProdId();
+
+        driver.navigate().to(reserveTicketUrl+prodId);
+        String ticketReservationBtn = findId("ticketReservation_Btn").getText();
+
+        // 팝업 제거
+        try {
+            // 팝업은 안뜰 수도 있어서 대기안함
+            driver.findElement(By.id("noticeAlert_layerpopup_cookie")).click();
+        }catch (NoSuchElementException e){
+        }
     }
 
     public void selectDate(MelonInfo info){
@@ -82,10 +106,9 @@ public class MelonTicket {
 
     public void selectTime(MelonInfo info){
         // 날짜의 선택의 경우 여러 개여서 List로 받는다.
-        MelonTicket melonTicket = info.getMelonTicket();
         int ticketTime = info.getTicketTime();
 
-        List<WebElement> itemTimeList = melonTicket.findClassList("item_time");
+        List<WebElement> itemTimeList = findClassList("item_time");
         itemTimeList.get(ticketTime).click();
 
     }

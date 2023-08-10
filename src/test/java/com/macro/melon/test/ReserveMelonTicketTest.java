@@ -31,27 +31,25 @@ public class ReserveMelonTicketTest {
 
     MelonTicket melonTicket = new MelonTicket();
 
+    MelonInfo melonInfo;
+
     WebDriver driver;
 
     WebElement element;
 
     Wait<WebDriver> wait;
-    String ReserveTicketUrl = "https://ticket.melon.com/performance/index.htm?prodId=";
-
-    // 웹으로 만들 때 사용자 입력을 받을 input
-    // 예매할 티켓의 prodId
-    String prodId = "208510";
-    // 예매할 티켓의 날짜
-    String ticketdate = "20230909";
-
-    // 예매할 시간 첫번 째는 0번
-    int ticketTime = 0;
 
 
     @BeforeEach
     void setupTest() {
         driver = melonTicket.getMainDriver();
         wait = melonTicket.getWaitDriver();
+
+        melonInfo = MelonInfo.builder()
+                .id(id)
+                .pwd(pwd)
+                .loginType(LoginTypeEnum.MELON)
+                .build();
     }
 
     @AfterEach
@@ -61,53 +59,55 @@ public class ReserveMelonTicketTest {
 
     @Test
     void 예매_사이트_이동(){
-        melonLogin();
+        melonInfo.setProdId("208510");
+        melonInfo.setTicketdate("20230909");
+        melonInfo.setTicketTime(0);
+        melonTicket.melonLogin(melonInfo);
     }
 
+    /**
+     * 팝업이 있는 페이지의 prodId가 필요함
+     */
     @Test
     void 팝업이_있을_때_제거_클릭(){
-        melonLogin();
+        melonInfo.setProdId("208514");
+        melonTicket.melonLogin(melonInfo);
     }
 
     @Test
     void 리스트_날짜_선택(){
-        prodId = "208510";
-        MelonInfo melonInfo = new MelonInfo.MelonInfoBuilder()
-                .tagId("dateSelect_")
-                .ticketdate("20230909")
-                .melonTicket(melonTicket)
-                .build();
-        melonLogin();
+        melonInfo.setTagId("dateSelect_");
+        melonInfo.setProdId("208510");
+        melonInfo.setTicketdate("20230909");
+        melonInfo.setTicketTime(0);
+
+        melonTicket.melonLogin(melonInfo);
 
         melonTicket.selectDate(melonInfo);
     }
 
     @Test
     void 캘린더_날짜_선택(){
-        prodId = "208169";
-        MelonInfo melonInfo = new MelonInfo.MelonInfoBuilder()
-                .tagId("calendar_SelectId_")
-                .ticketdate("20230812")
-                .melonTicket(melonTicket)
-                .build();
+        melonInfo.setTagId("calendar_SelectId_");
+        melonInfo.setProdId("208169");
+        melonInfo.setTicketdate("20230812");
+        melonInfo.setTicketTime(0);
 
-        melonLogin();
+
+
+        melonTicket.melonLogin(melonInfo);
 
         melonTicket.selectDate(melonInfo);
     }
 
     @Test
     void 리스트_시간_선택(){
-        prodId = "208510";
+        melonInfo.setTagId("dateSelect_");
+        melonInfo.setProdId("208510");
+        melonInfo.setTicketdate("20230909");
+        melonInfo.setTicketTime(0);
 
-        MelonInfo melonInfo = new MelonInfo.MelonInfoBuilder()
-                .tagId("dateSelect_")
-                .ticketdate("20230909")
-                .ticketTime(0)
-                .melonTicket(melonTicket)
-                .build();
-
-        melonLogin();
+        melonTicket.melonLogin(melonInfo);
 
         melonTicket.selectDate(melonInfo);
 
@@ -116,16 +116,12 @@ public class ReserveMelonTicketTest {
 
     @Test
     void 캘린더_시간_선택(){
-        prodId = "208169";
+        melonInfo.setTagId("calendar_SelectId_");
+        melonInfo.setProdId("208169");
+        melonInfo.setTicketdate("20230812");
+        melonInfo.setTicketTime(0);
 
-        MelonInfo melonInfo = new MelonInfo.MelonInfoBuilder()
-                .tagId("calendar_SelectId_")
-                .ticketdate("20230812")
-                .ticketTime(0)
-                .melonTicket(melonTicket)
-                .build();
-
-        melonLogin();
+        melonTicket.melonLogin(melonInfo);
 
         melonTicket.selectDate(melonInfo);
 
@@ -136,16 +132,12 @@ public class ReserveMelonTicketTest {
 
     @Test
     void 예매하기_버튼_클릭(){
-        prodId = "208510";
+        melonInfo.setTagId("dateSelect_");
+        melonInfo.setProdId("208510");
+        melonInfo.setTicketdate("20230909");
+        melonInfo.setTicketTime(0);
 
-        MelonInfo melonInfo = new MelonInfo.MelonInfoBuilder()
-                .tagId("dateSelect_")
-                .ticketdate("20230909")
-                .ticketTime(0)
-                .melonTicket(melonTicket)
-                .build();
-
-        melonLogin();
+        melonTicket.melonLogin(melonInfo);
 
         melonTicket.selectDate(melonInfo);
 
@@ -188,33 +180,6 @@ public class ReserveMelonTicketTest {
 //        selectDate("dateSelect_");
 //
 //        driver.findElement(By.id("ticketReservation_Btn")).click();
-    }
-
-    void melonLogin(){
-        MelonInfo melonInfo = melonTicket.moveMelonLoginPage(LoginTypeEnum.MELON, melonTicket);
-        melonInfo.setId(id);
-        melonInfo.setPwd(pwd);
-
-        WebElement id = melonTicket.findId("id");
-        WebElement pwd = melonTicket.findId("pwd");
-        id.sendKeys(melonInfo.getId());
-        pwd.sendKeys(melonInfo.getPwd());
-        WebElement btnLogin = melonTicket.findId("btnLogin");
-        btnLogin.click();
-
-        WebElement btnLogout = melonTicket.findId("btnLogout");
-        String logout = btnLogout.getText();
-        assertThat(logout).contains("로그아웃");
-
-        driver.navigate().to(ReserveTicketUrl+prodId);
-        String ticketReservationBtn = melonTicket.findId("ticketReservation_Btn").getText();
-
-        // 팝업 제거
-        try {
-            // 팝업은 안뜰 수도 있어서 대기안함
-            driver.findElement(By.id("noticeAlert_layerpopup_cookie")).click();
-        }catch (NoSuchElementException e){
-        }
     }
 
 }
