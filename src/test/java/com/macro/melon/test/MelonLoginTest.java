@@ -1,4 +1,4 @@
-package com.macro.melon;
+package com.macro.melon.test;
 
 import com.macro.melon.config.LoginTypeEnum;
 import org.junit.jupiter.api.*;

@@ -1,8 +1,7 @@
-package com.macro.melon;
+package com.macro.melon.test;
 
 import com.macro.melon.config.LoginTypeEnum;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
@@ -14,11 +13,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.PropertySource;
 
-import java.util.List;
-import java.util.Set;
-
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * !!테스트코드 실행하기 전 ReserveTicketUrl에 예매가 가능한 url로 수정한 뒤 실행
@@ -59,10 +54,10 @@ public class ReserveMelonTicketTest {
         wait = melonTicket.getWaitDriver();
     }
 
-//    @AfterEach
-//    void teardown() {
-//        driver.quit();
-//    }
+    @AfterEach
+    void teardown() {
+        driver.quit();
+    }
 
     @Test
     void 예매_사이트_이동(){
@@ -200,20 +195,25 @@ public class ReserveMelonTicketTest {
         melonInfo.setId(id);
         melonInfo.setPwd(pwd);
 
-        driver.findElement(By.id("id")).sendKeys(melonInfo.getId());
-        driver.findElement(By.id("pwd")).sendKeys(melonInfo.getPwd());
-        driver.findElement(By.id("btnLogin")).click();
-        String logout  = driver.findElement(By.id("btnLogout")).getText();
+        WebElement id = melonTicket.findId("id");
+        WebElement pwd = melonTicket.findId("pwd");
+        id.sendKeys(melonInfo.getId());
+        pwd.sendKeys(melonInfo.getPwd());
+        WebElement btnLogin = melonTicket.findId("btnLogin");
+        btnLogin.click();
+
+        WebElement btnLogout = melonTicket.findId("btnLogout");
+        String logout = btnLogout.getText();
         assertThat(logout).contains("로그아웃");
 
         driver.navigate().to(ReserveTicketUrl+prodId);
-        String ticketReservationBtn = driver.findElement(By.id("ticketReservation_Btn")).getText();
+        String ticketReservationBtn = melonTicket.findId("ticketReservation_Btn").getText();
 
         // 팝업 제거
         try {
+            // 팝업은 안뜰 수도 있어서 대기안함
             driver.findElement(By.id("noticeAlert_layerpopup_cookie")).click();
         }catch (NoSuchElementException e){
-            // 예외를 무시하고 아무 작업도 수행하지 않음
         }
     }
 

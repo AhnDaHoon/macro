@@ -1,8 +1,9 @@
-package com.macro.melon;
+package com.macro.melon.test;
 
 import com.macro.melon.config.LoginTypeEnum;
 import com.macro.melon.config.MelonConfig;
 import org.openqa.selenium.*;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Wait;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
@@ -56,8 +57,14 @@ public class MelonTicket {
         driver.get(melonInfo.getUrl());
 
         switch (loginTypeEnum){
-            case KAKAO -> driver.findElement(By.className("kakao")).click();
-            case MELON -> driver.findElement(By.className("melon")).click();
+            case KAKAO -> {
+                WebElement kakaoBtn = findClass("kakao");
+                kakaoBtn.click();
+            }
+            case MELON -> {
+                WebElement melonBtn = findClass("melon");
+                melonBtn.click();
+            }
         }
 
         int usePageNumber = melonInfo.getLoginType().getUsePageNumber();
@@ -65,33 +72,12 @@ public class MelonTicket {
         return melonInfo;
     }
 
-    public WebElement findClass(String name){
-        WebElement result = null;
-        while (true){
-            try {
-                result = driver.findElement(By.className(name));
-                break;
-            } catch (NoSuchElementException e){
-                System.out.println("NoSuchElementException className = "+name);
-            }
-        }
-        return result;
-    }
-
     public void selectDate(MelonInfo info){
-        WebElement element = info.getElement();
         String tagId = info.getTagId();
         String ticketdate = info.getTicketdate();
 
-        while (true) {
-            try {
-                element = driver.findElement(By.id(tagId+ticketdate));
-                break;
-            } catch (NoSuchElementException e) {
-                System.out.println("날짜 못찾음");
-            }
-        }
-        element.click();
+        WebElement dateElement = findId(tagId + ticketdate);
+        dateElement.click();
     }
 
     public void selectTime(MelonInfo info){
@@ -100,28 +86,35 @@ public class MelonTicket {
         int ticketTime = info.getTicketTime();
 
         List<WebElement> itemTimeList = melonTicket.findClassList("item_time");
-        while (melonTicket.findClassList("item_time") == null || itemTimeList.size() == 0){
-            itemTimeList = melonTicket.findClassList("item_time");
-        }
-
-        System.out.println("itemTimeList = " + itemTimeList.size());
         itemTimeList.get(ticketTime).click();
 
     }
 
+    public WebElement findClass(String name){
+        By by = By.className(name);
+        waitElement(by);
+        return driver.findElement(by);
+    }
+
     public List<WebElement> findClassList(String name){
-        return driver.findElements(By.className(name));
+        By by = By.className(name);
+        waitElement(by);
+        return driver.findElements(by);
     }
 
     public WebElement findId(String name){
-        return driver.findElement(By.id(name));
+        By by = By.id(name);
+        waitElement(by);
+        return driver.findElement(by);
     }
 
     public List<WebElement> findIdList(String name){
-        return driver.findElements(By.id(name));
+        By by = By.id(name);
+        waitElement(by);
+        return driver.findElements(by);
     }
 
-    // 새로운 페이지가 감지될 때 까지 while문 돌리는 메서드, 메서드명 고민중...
+    // 새로운 페이지가 감지될 때까지 while 문 돌리는 메서드, 메서드명 고민 중...
     public void newPage (){
         boolean isNotFound = true;
         while (isNotFound){
@@ -132,4 +125,14 @@ public class MelonTicket {
             System.out.println("not found");
         }
     }
+
+    public void waitElement(By by){
+        try {
+            // 조건 충족까지 대기하고 요소를 찾음
+            WebElement element = wait.until(ExpectedConditions.presenceOfElementLocated(by));
+        } catch (Exception e) {
+            System.out.println("요소가 나타나지 않거나 대기 중에 오류가 발생했습니다.");
+        }
+    }
+
 }

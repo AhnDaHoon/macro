@@ -1,4 +1,4 @@
-package com.macro.melon;
+package com.macro.melon.test;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
