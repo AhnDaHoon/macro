@@ -28,7 +28,7 @@ public class MelonInfo {
 
     private MelonTicket melonTicket;
 
-    // 티켓 시간 맨 위부터 0으로 시작하고 밑으로 내려갈수록 +1
+    // 티켓 시간 번호 맨위에 있는 시간이 0 그다음 1 +1씩 올라감
     private int ticketTime;
 
     // 티켓 날짜 예) 20230909

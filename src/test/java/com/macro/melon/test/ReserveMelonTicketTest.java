@@ -67,10 +67,10 @@ public class ReserveMelonTicketTest {
                 .build();
     }
 
-    @AfterEach
-    void teardown() {
-        driver.quit();
-    }
+//    @AfterEach
+//    void teardown() {
+//        driver.quit();
+//    }
 
     @Test
     void 예매_사이트_이동(){
@@ -155,7 +155,8 @@ public class ReserveMelonTicketTest {
     @Test
     void 좌석_선택(){
         settingListDate();
-
+        melonInfo.setRsrvVolume(3);
+        int rsrvVolume = melonInfo.getRsrvVolume();
         melonTicket.melonLogin(melonInfo);
 
         melonTicket.selectDate(melonInfo);
@@ -178,11 +179,14 @@ public class ReserveMelonTicketTest {
         List<WebElement> seatList = new ArrayList<>();
 
         for (WebElement rect : rectElements) {
-            if(!rect.getAttribute("fill").equals("#DDDDDD") && !rect.getAttribute("fill").equals("none")){
-                coordinates.add(new Triple(Float.parseFloat(rect.getAttribute("y")),
-                                            Float.parseFloat(rect.getAttribute("x")),
-                                            rect));
+            if(rect.getAttribute("fill").equals("#DDDDDD") && !rect.getAttribute("fill").equals("none")){
+                continue;
             }
+            coordinates.add(new Triple(Float.parseFloat(rect.getAttribute("y")),
+                    Float.parseFloat(rect.getAttribute("x")),
+                    rect));
+
+            if(coordinates.size() >= 100) break;
         }
 
         Collections.sort(coordinates, Comparator.comparingDouble(Triple::getY));
@@ -199,7 +203,7 @@ public class ReserveMelonTicketTest {
                 seatList.add(triple.getRect());
             }
 
-            if(seatList.size() >= 2){
+            if(seatList.size() >= rsrvVolume){
                 break;
             }
             seatX = triple.getX();
@@ -209,7 +213,7 @@ public class ReserveMelonTicketTest {
             webElement.click();
         }
 
-        melonTicket.findId("nextTicketSelection").click();
+//        melonTicket.findId("nextTicketSelection").click();
 
     }
 
