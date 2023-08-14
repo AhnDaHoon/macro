@@ -2,10 +2,10 @@ package com.macro.melon.test;
 
 import com.macro.melon.config.LoginTypeEnum;
 import com.macro.melon.config.Triple;
+import com.macro.melon.test.file.CaptchaImgDownloadMelon;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -14,25 +14,31 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.PropertySource;
 
+import java.io.IOException;
 import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
- * !!테스트코드 실행하기 전 ReserveTicketUrl에 예매가 가능한 url로 수정한 뒤 실행
+ * !! 실제 예매가 가능한 사이트 정보를 입력하고 테스트 돌릴 것
  *
  */
 @SpringBootTest
 @PropertySource("classpath:test.yml")
 public class ReserveMelonTicketTest {
 
-    @Value("${melonId}")
+    @Value("${melon.id}")
     private String id;
 
-    @Value("${melonPwd}")
+    @Value("${melon.pwd}")
     private String pwd;
 
+    @Value("${melon.folderPath}")
+    private String folderPath;
+
     MelonTicket melonTicket = new MelonTicket();
+
+    CaptchaImgDownloadMelon file = new CaptchaImgDownloadMelon();
 
     MelonInfo melonInfo;
 
@@ -50,7 +56,7 @@ public class ReserveMelonTicketTest {
     void settingCalendarDate(){
         melonInfo.setTagId("calendar_SelectId_");
         melonInfo.setProdId("208169");
-        melonInfo.setTicketdate("20230812");
+        melonInfo.setTicketdate("20230822");
         melonInfo.setTicketTime(0);
     }
 
@@ -217,13 +223,50 @@ public class ReserveMelonTicketTest {
 
     }
 
+    @Test
+    void 캡쳐_이미지_다운로드(){
+        settingListDate();
+        // 예매할 좌석 갯수
+        melonInfo.setRsrvVolume(3);
+        melonInfo.setProdId("208419");
+        melonInfo.setTagId("calendar_SelectId_");
+        melonInfo.setTicketdate("20230824");
+        int rsrvVolume = melonInfo.getRsrvVolume();
+
+        // 로그인
+        melonTicket.melonLogin(melonInfo);
+
+        // 날짜 선택
+        melonTicket.selectDate(melonInfo);
+
+        // 시간 선택
+        melonTicket.selectTime(melonInfo);
+
+        // 예매하기 버튼 클릭
+        melonTicket.findId("ticketReservation_Btn").click();
+
+        // 좌석 선택 페이지 대기
+        wait.until(ExpectedConditions.numberOfWindowsToBe(2));
+        melonTicket.windowHandler(2);
+        System.out.println("새로운 페이지 감지");
+
+        WebElement captchaImg = melonTicket.findId("captchaImg");
+        String src = captchaImg.getAttribute("src");
+        System.out.println("src = " + src);
+        try {
+            file.downloadImage(src, folderPath);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        WebElement oneStopFrame = melonTicket.findFrame("oneStopFrame");
+        melonTicket.switchFrame(oneStopFrame);
+    }
+
     /**
      * 좌석 선택까지 완료하고 작업
      */
-    @Test
-    void 캡쳐_이미지_자동_입력(){
-
-    }
+ 
 
 
 

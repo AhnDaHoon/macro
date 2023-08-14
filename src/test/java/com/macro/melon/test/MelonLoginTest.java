@@ -1,6 +1,7 @@
 package com.macro.melon.test;
 
 import com.macro.melon.config.LoginTypeEnum;
+import net.sourceforge.tess4j.Tesseract;
 import org.junit.jupiter.api.*;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -31,6 +32,8 @@ public class MelonLoginTest {
 
     WebDriver driver;
 
+    Tesseract tesseract;
+
     WebElement element;
 
     Wait<WebDriver> wait;
@@ -39,6 +42,7 @@ public class MelonLoginTest {
     void setupTest() {
         driver = melonTicket.getMainDriver();
         wait = melonTicket.getWaitDriver();
+        tesseract = melonTicket.getTesseract();
 
         melonInfo = MelonInfo.builder()
                 .id(id)

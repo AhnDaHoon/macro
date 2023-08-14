@@ -2,26 +2,33 @@ package com.macro.melon.test;
 
 import com.macro.melon.config.LoginTypeEnum;
 import com.macro.melon.config.MelonConfig;
+import net.sourceforge.tess4j.Tesseract;
+import net.sourceforge.tess4j.TesseractException;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Wait;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.stereotype.Component;
 
+import java.io.*;
+import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.openqa.selenium.support.ui.ExpectedConditions.numberOfWindowsToBe;
 
-@Component
 public class MelonTicket {
 
     private AnnotationConfigApplicationContext ct = new AnnotationConfigApplicationContext(MelonConfig.class);
 
     private WebDriver driver = ct.getBean("getMainDriver", WebDriver.class);
     private WebDriverWait wait = ct.getBean("getWaitDriver", WebDriverWait.class);
+    private Tesseract tesseract = ct.getBean("getTesseract", Tesseract.class);
 
     private Set<String> newWindowHandles;
 
@@ -33,6 +40,9 @@ public class MelonTicket {
 
     public Wait<WebDriver> getWaitDriver(){
         return wait;
+    }
+    public Tesseract getTesseract(){
+        return tesseract;
     }
 
     public void windowHandler(int usePageNumber){
@@ -172,6 +182,30 @@ public class MelonTicket {
 
     public void switchFrame(WebElement iframe){
         driver.switchTo().frame(iframe);
+    }
+
+
+    /**
+     *
+     * @param targetFileName
+     * @return result.substring(0, 6) 멜론 티켓은 문자가 6글자임, 문자를 변환하면 뒤에 이상한 문자가 붙어서 나오기 때문에 6글자만 가져온다.
+     */
+    public String convertImageToString(String targetFileName){
+        String result = null;
+
+        File file = new File(targetFileName);
+
+        if(file.exists() && file.canRead()) {
+            try {
+                result = tesseract.doOCR(file).substring(0, 6);
+            } catch (TesseractException e) {
+                result = e.getMessage();
+            }
+        } else {
+            result = "not exist";
+        }
+        System.out.println(result);
+        return result.substring(0, 6);
     }
 
 }
