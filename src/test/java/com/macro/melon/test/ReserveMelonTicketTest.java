@@ -2,7 +2,8 @@ package com.macro.melon.test;
 
 import com.macro.melon.config.LoginTypeEnum;
 import com.macro.melon.config.Triple;
-import com.macro.melon.test.file.MelonCaptchaImgDownload;
+import com.macro.melon.test.file.MelonCaptcha;
+import com.macro.melon.test.seat.MelonSeat;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.WebDriver;
@@ -37,8 +38,9 @@ public class ReserveMelonTicketTest {
 
     MelonTicket melonTicket = new MelonTicket();
 
-    MelonCaptchaImgDownload file = new MelonCaptchaImgDownload();
+    MelonCaptcha file = new MelonCaptcha();
 
+    MelonSeat melonSeat = null;
 
     MelonInfo melonInfo;
 
@@ -65,7 +67,7 @@ public class ReserveMelonTicketTest {
     void setupTest() {
         driver = melonTicket.getMainDriver();
         wait = melonTicket.getWaitDriver();
-
+        melonSeat = new MelonSeat(melonTicket);
         melonInfo = MelonInfo.builder()
                 .id(id)
                 .pwd(pwd)
@@ -162,7 +164,6 @@ public class ReserveMelonTicketTest {
     void 좌석_선택(){
         settingListDate();
         melonInfo.setRsrvVolume(3);
-        int rsrvVolume = melonInfo.getRsrvVolume();
         melonTicket.melonLogin(melonInfo);
 
         melonTicket.selectDate(melonInfo);
@@ -176,51 +177,7 @@ public class ReserveMelonTicketTest {
 
         System.out.println("새로운 페이지 감지");
 
-        WebElement oneStopFrame = melonTicket.findFrame("oneStopFrame");
-        melonTicket.switchFrame(oneStopFrame);
-
-        List<WebElement> rectElements = melonTicket.findTagList("rect");
-
-        List<Triple> coordinates = new ArrayList<>();
-        List<WebElement> seatList = new ArrayList<>();
-
-        for (WebElement rect : rectElements) {
-            if(rect.getAttribute("fill").equals("#DDDDDD") && !rect.getAttribute("fill").equals("none")){
-                continue;
-            }
-            coordinates.add(new Triple(Float.parseFloat(rect.getAttribute("y")),
-                    Float.parseFloat(rect.getAttribute("x")),
-                    rect));
-
-            if(coordinates.size() >= 100) break;
-        }
-
-        Collections.sort(coordinates, Comparator.comparingDouble(Triple::getY));
-
-        float seatX = 0;
-        for (Triple triple : coordinates) {
-            if(seatList.size() > 0){
-                if(triple.getX() - seatX == 13){
-                    seatList.add(triple.getRect());
-                }else {
-                    seatList.clear();
-                }
-            }else{
-                seatList.add(triple.getRect());
-            }
-
-            if(seatList.size() >= rsrvVolume){
-                break;
-            }
-            seatX = triple.getX();
-        }
-
-        for (WebElement webElement : seatList) {
-            webElement.click();
-        }
-
-//        melonTicket.findId("nextTicketSelection").click();
-
+        melonSeat.selectSeat(melonInfo);
     }
 
     @Test
@@ -251,7 +208,7 @@ public class ReserveMelonTicketTest {
         System.out.println("새로운 페이지 감지");
 
         try {
-            file.downloadImage(melonTicket, folderPath);
+            file.imageDownload(melonTicket, folderPath);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -289,7 +246,7 @@ public class ReserveMelonTicketTest {
 
         String targetFileName = "";
         try {
-            targetFileName = file.downloadImage(melonTicket, folderPath);
+            targetFileName = file.imageDownload(melonTicket, folderPath);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -316,7 +273,7 @@ public class ReserveMelonTicketTest {
     void 캡쳐_이미지_자동_입력_실패_시_새로고침_후_다시_입력() throws IOException, InterruptedException {
         settingListDate();
         // 예매할 좌석 갯수
-        melonInfo.setRsrvVolume(3);
+        melonInfo.setRsrvVolume(2);
         melonInfo.setProdId("208419");
         melonInfo.setTagId("calendar_SelectId_");
         melonInfo.setTicketdate("20230824");
@@ -339,7 +296,7 @@ public class ReserveMelonTicketTest {
         melonTicket.windowHandler(2);
         System.out.println("새로운 페이지 감지");
 
-        String targetFileName = file.downloadImage(melonTicket, folderPath);
+        String targetFileName = file.imageDownload(melonTicket, folderPath);
         melonTicket.captchaVerification(targetFileName);
         WebElement errorMessage = melonTicket.findId("errorMessage");
         boolean displayed = errorMessage.isDisplayed();
@@ -348,7 +305,7 @@ public class ReserveMelonTicketTest {
             WebElement btnReload = melonTicket.findId("btnReload");
             btnReload.click();
             Thread.sleep(500);
-            targetFileName = file.downloadImage(melonTicket, folderPath);
+            targetFileName = file.imageDownload(melonTicket, folderPath);
 
             System.out.println("targetFileName = " + targetFileName);
             melonTicket.captchaVerification(targetFileName);
@@ -356,7 +313,58 @@ public class ReserveMelonTicketTest {
         }
     }
 
+    @Test
+    void 캡쳐_이미지_입력_및_좌석_선택(){
+        settingListDate();
+        // 예매할 좌석 갯수
+        melonInfo.setRsrvVolume(3);
+        melonInfo.setProdId("208593");
+        melonInfo.setTicketdate("20230902");
+        int rsrvVolume = melonInfo.getRsrvVolume();
 
+        // 로그인
+        melonTicket.melonLogin(melonInfo);
+
+        // 날짜 선택
+        melonTicket.selectDate(melonInfo);
+
+        // 시간 선택
+        melonTicket.selectTime(melonInfo);
+
+        // 예매하기 버튼 클릭
+        melonTicket.findId("ticketReservation_Btn").click();
+
+        // 좌석 선택 페이지 대기
+        wait.until(ExpectedConditions.numberOfWindowsToBe(2));
+        melonTicket.windowHandler(2);
+        System.out.println("새로운 페이지 감지");
+
+        try {
+            String targetFileName = file.imageDownload(melonTicket, folderPath);
+            melonTicket.captchaVerification(targetFileName);
+            WebElement errorMessage = melonTicket.findId("errorMessage");
+            boolean displayed = errorMessage.isDisplayed();
+
+            while (displayed){
+                    WebElement btnReload = melonTicket.findId("btnReload");
+                    btnReload.click();
+
+                    // 클릭하고 텀을 주고 이미지를 다운로드 (이렇게 안하면 새로고침 이전 이미지를 다운로드함)
+                    Thread.sleep(500);
+                    targetFileName = file.imageDownload(melonTicket, folderPath);
+
+                    System.out.println("targetFileName = " + targetFileName);
+                    melonTicket.captchaVerification(targetFileName);
+                    displayed = errorMessage.isDisplayed();
+            }
+        } catch (IOException e) {
+            System.out.println("e = " + e);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
+        melonSeat.selectSeat(melonInfo);
+    }
 
 
 

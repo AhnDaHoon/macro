@@ -12,9 +12,9 @@ import java.util.Date;
 
 @PropertySource("classpath:test.yml")
 @Component
-public class MelonCaptchaImgDownload implements CaptchaImgDownload{
+public class MelonCaptcha {
 
-    public String downloadImage(MelonTicket melonTicket, String folderPath) throws IOException {
+    public String imageDownload(MelonTicket melonTicket, String folderPath) throws IOException {
         WebElement captchaImg = melonTicket.findId("captchaImg");
         String src = captchaImg.getAttribute("src");
 
@@ -66,7 +66,7 @@ public class MelonCaptchaImgDownload implements CaptchaImgDownload{
 
     public String createCaptchaImgName(){
         Date now = new Date();
-        SimpleDateFormat combinedFormat = new SimpleDateFormat("yyyyMMddHHmmss");
+        SimpleDateFormat combinedFormat = new SimpleDateFormat("yyyyMMddHHmmssmm");
 
         String currentTime = combinedFormat.format(now);
         return currentTime;
