@@ -1,5 +1,7 @@
 package com.macro.melon.test.file;
 
+import com.macro.melon.test.MelonTicket;
+import org.openqa.selenium.WebElement;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
@@ -10,17 +12,18 @@ import java.util.Date;
 
 @PropertySource("classpath:test.yml")
 @Component
-public class CaptchaImgDownloadMelon implements CaptchaImgDownload{
+public class MelonCaptchaImgDownload implements CaptchaImgDownload{
 
-    public String downloadImage(String imageUrl, String folderPath) throws IOException {
-        System.out.println("folderPath = " + folderPath);
+    public String downloadImage(MelonTicket melonTicket, String folderPath) throws IOException {
+        WebElement captchaImg = melonTicket.findId("captchaImg");
+        String src = captchaImg.getAttribute("src");
+
         String folderWithDate = createFolderWithDate(folderPath);
         String captchaImgName = createCaptchaImgName();
-        String targetFileName = folderPath+"/"+folderWithDate+"/"+captchaImgName+".jpg";
+        String targetFileName = folderPath+"/"+folderWithDate+"/"+captchaImgName+".png";
 
-        System.out.println("targetFileName = " + targetFileName);
         try {
-            String[] parts = imageUrl.split(",");
+            String[] parts = src.split(",");
             String base64Data = parts[1];
             byte[] imageData = Base64.getDecoder().decode(base64Data);
 
@@ -33,8 +36,9 @@ public class CaptchaImgDownloadMelon implements CaptchaImgDownload{
                 }
                 System.out.println("이미지 다운로드 완료");
             }
+
         } catch (IOException e) {
-            System.out.println("e = " + e);
+                System.out.println("e = " + e);
         }
         return targetFileName;
     }

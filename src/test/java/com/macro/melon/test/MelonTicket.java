@@ -22,6 +22,7 @@ import java.util.Set;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.openqa.selenium.support.ui.ExpectedConditions.numberOfWindowsToBe;
 
+@Component
 public class MelonTicket {
 
     private AnnotationConfigApplicationContext ct = new AnnotationConfigApplicationContext(MelonConfig.class);
@@ -197,15 +198,29 @@ public class MelonTicket {
 
         if(file.exists() && file.canRead()) {
             try {
-                result = tesseract.doOCR(file).substring(0, 6);
+                result = tesseract.doOCR(file);
             } catch (TesseractException e) {
-                result = e.getMessage();
+                result = "TesseractException";
             }
         } else {
             result = "not exist";
         }
         System.out.println(result);
         return result.substring(0, 6);
+    }
+
+    public void captchaVerification(String targetFileName){
+        // 문자열로 변환된 값
+        String convertImageToString = convertImageToString(targetFileName);
+
+        // 캡쳐 입력창
+        WebElement captchaInput = findId("label-for-captcha");
+        captchaInput.clear();
+        captchaInput.sendKeys(convertImageToString);
+
+        // 캡쳐 화면 확인 버튼
+        WebElement btnComplete = findId("btnComplete");
+        btnComplete.click();
     }
 
 }

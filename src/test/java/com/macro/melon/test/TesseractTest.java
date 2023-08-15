@@ -34,14 +34,14 @@ public class TesseractTest {
 
         if(file.exists() && file.canRead()) {
             try {
-                result = tesseract.doOCR(file).substring(0, 6);
+                result = tesseract.doOCR(file);
             } catch (TesseractException e) {
                 result = e.getMessage();
             }
         } else {
             result = "not exist";
         }
-        System.out.println(result);
-        assertEquals("IQDUKR", result);
+        System.out.println(result.substring(0, 6));
+        assertEquals("IQDUKR", result.substring(0, 6));
     }
 }
