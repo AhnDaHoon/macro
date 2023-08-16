@@ -130,6 +130,16 @@ public class MelonTicket {
         return driver.findElement(by);
     }
 
+    // to be updated
+//    public WebElement findClass(String name){
+//        By by = By.className(name);
+//        boolean isSuccess = waitElement(by);
+//        if(isSuccess){
+//            return driver.findElement(by);
+//        }
+//        return null;
+//    }
+
     public List<WebElement> findClassList(String name){
         By by = By.className(name);
         waitElement(by);
@@ -180,6 +190,19 @@ public class MelonTicket {
             System.out.println("요소가 나타나지 않거나 대기 중에 오류가 발생했습니다.");
         }
     }
+
+    // to be updated
+//    public boolean waitElement(By by){
+//        try {
+//            // 조건 충족까지 대기하고 요소를 찾음
+//            WebElement element = wait.until(ExpectedConditions.presenceOfElementLocated(by));
+//        } catch (Exception e) {
+//            System.out.println("요소가 나타나지 않거나 대기 중에 오류가 발생했습니다.");
+//            return false;
+//        }
+//        return true;
+//    }
+
 
     public void switchFrame(WebElement iframe){
         driver.switchTo().frame(iframe);
