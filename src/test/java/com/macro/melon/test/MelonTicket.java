@@ -205,8 +205,12 @@ public class MelonTicket {
         } else {
             result = "not exist";
         }
-        System.out.println(result);
+        if(result.equals("TesseractException") || result.equals("not exist")){
+            return result;
+        }
         return result.substring(0, 6);
+
+
     }
 
     public void captchaVerification(String targetFileName){
