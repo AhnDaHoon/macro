@@ -43,7 +43,7 @@ public class MelonInfo {
     // 예매할 티켓 갯수
     private int rsrvVolume;
 
-    public setIdAndPwd(MelonUser melonUser){
+    public void setIdAndPwd(MelonUser melonUser){
         this.id = melonUser.getId();
         this.pwd = melonUser.getPwd();
     }

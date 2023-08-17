@@ -17,3 +17,11 @@ function ajaxRequest(requestUrl, requestData){
         }
     })
 }
+
+function ValidateCheck(tag, name){
+    if(tag.length == 0){
+        alert(`${name}을 입력해주세요.`)
+        return false;
+    }
+    return true;
+}

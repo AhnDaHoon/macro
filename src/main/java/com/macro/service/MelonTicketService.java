@@ -87,14 +87,15 @@ public class MelonTicketService {
         WebElement btnLogin = findId("btnLogin");
         btnLogin.click();
 
-        WebElement btnLogout = findId("btnLogout");
-        String logout = btnLogout.getText();
 
+    }
+
+
+    public void moveReservePage(MelonInfo melonInfo){
         String reserveTicketUrl = melonInfo.getReserveTicketUrl();
         String prodId = melonInfo.getProdId();
 
         driver.navigate().to(reserveTicketUrl+prodId);
-        String ticketReservationBtn = findId("ticketReservation_Btn").getText();
 
         // 팝업 제거
         try {
@@ -102,8 +103,8 @@ public class MelonTicketService {
             driver.findElement(By.id("noticeAlert_layerpopup_cookie")).click();
         }catch (NoSuchElementException e){
         }
-    }
 
+    }
     public void selectDate(MelonInfo info){
         String tagId = info.getTagId();
         String ticketdate = info.getTicketDate();
