@@ -26,7 +26,7 @@ public class MelonInfo {
 
     private LoginTypeEnum loginType;
 
-    private MelonTicket melonTicket;
+    private MelonTicketService melonTicketService;
 
     // 티켓 시간 번호 맨위에 있는 시간이 0 그다음 1 +1씩 올라감
     private int ticketTime;

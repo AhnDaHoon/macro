@@ -2,7 +2,7 @@ package com.macro.melon.test.seat;
 
 import com.macro.melon.config.Triple;
 import com.macro.melon.test.MelonInfo;
-import com.macro.melon.test.MelonTicket;
+import com.macro.melon.test.MelonTicketService;
 import lombok.RequiredArgsConstructor;
 import org.openqa.selenium.WebElement;
 import org.springframework.stereotype.Component;
@@ -16,18 +16,18 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MelonSeat {
 
-    private final MelonTicket melonTicket;
+    private final MelonTicketService melonTicketService;
 
     public void changeFrame(){
-        WebElement oneStopFrame = melonTicket.findFrame("oneStopFrame");
-        melonTicket.switchFrame(oneStopFrame);
+        WebElement oneStopFrame = melonTicketService.findFrame("oneStopFrame");
+        melonTicketService.switchFrame(oneStopFrame);
     }
 
     public void selectSeat(MelonInfo melonInfo){
         changeFrame();
 
         int rsrvVolume = melonInfo.getRsrvVolume();
-        List<WebElement> rectElements = melonTicket.findTagList("rect");
+        List<WebElement> rectElements = melonTicketService.findTagList("rect");
 
         List<Triple> coordinates = new ArrayList<>();
         List<WebElement> seatList = new ArrayList<>();
@@ -36,8 +36,8 @@ public class MelonSeat {
             if(rect.getAttribute("fill").equals("#DDDDDD") && !rect.getAttribute("fill").equals("none")){
                 continue;
             }
-            coordinates.add(new Triple(Float.parseFloat(rect.getAttribute("y")),
-                    Float.parseFloat(rect.getAttribute("x")),
+            coordinates.add(new Triple((int) Math.floor(Float.parseFloat(rect.getAttribute("y"))),
+                    (int) Math.floor(Float.parseFloat(rect.getAttribute("x"))),
                     rect));
 
 //            if(coordinates.size() >= 100) break;
@@ -67,6 +67,6 @@ public class MelonSeat {
             webElement.click();
         }
 
-        melonTicket.findId("nextTicketSelection").click();
+        melonTicketService.findId("nextTicketSelection").click();
     }
 }

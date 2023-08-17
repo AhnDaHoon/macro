@@ -1,9 +1,7 @@
 package com.macro.melon.test;
 
-import com.macro.melon.config.LoginTypeEnum;
 import net.sourceforge.tess4j.Tesseract;
 import net.sourceforge.tess4j.TesseractException;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -14,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 public class TesseractTest {
-    MelonTicket melonTicket = new MelonTicket();
+    MelonTicketService melonTicketService = new MelonTicketService();
 
     Tesseract tesseract;
 
@@ -22,7 +20,7 @@ public class TesseractTest {
 
     @BeforeEach
     void setupTest() {
-        tesseract = melonTicket.getTesseract();
+        tesseract = melonTicketService.getTesseract();
 
     }
 

@@ -3,7 +3,6 @@ package com.macro.melon.test;
 import com.macro.melon.config.LoginTypeEnum;
 import net.sourceforge.tess4j.Tesseract;
 import org.junit.jupiter.api.*;
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Wait;
@@ -26,7 +25,7 @@ public class MelonLoginTest {
     @Value("${melonPwd}")
     private String pwd;
 
-    MelonTicket melonTicket = new MelonTicket();
+    MelonTicketService melonTicketService = new MelonTicketService();
 
     MelonInfo melonInfo;
 
@@ -40,9 +39,9 @@ public class MelonLoginTest {
 
     @BeforeEach
     void setupTest() {
-        driver = melonTicket.getMainDriver();
-        wait = melonTicket.getWaitDriver();
-        tesseract = melonTicket.getTesseract();
+        driver = melonTicketService.getMainDriver();
+        wait = melonTicketService.getWaitDriver();
+        tesseract = melonTicketService.getTesseract();
 
         melonInfo = MelonInfo.builder()
                 .id(id)
@@ -91,9 +90,9 @@ public class MelonLoginTest {
         melonInfo.setLoginType(LoginTypeEnum.KAKAO);
         moveMelonLoginPage(melonInfo);
 
-        WebElement inputId = melonTicket.findId("loginId--1");
-        WebElement inputPwd = melonTicket.findId("password--2");
-        WebElement submitBtn = melonTicket.findClass("submit");
+        WebElement inputId = melonTicketService.findId("loginId--1");
+        WebElement inputPwd = melonTicketService.findId("password--2");
+        WebElement submitBtn = melonTicketService.findClass("submit");
 
         inputId.sendKeys(melonInfo.getId());
         inputPwd.sendKeys(melonInfo.getPwd());
@@ -107,15 +106,15 @@ public class MelonLoginTest {
     void 멜론_티켓_멜론_아이디_로그인(){
         moveMelonLoginPage(melonInfo);
 
-        WebElement inputId = melonTicket.findId("id");
-        WebElement inputPwd = melonTicket.findId("pwd");
-        WebElement btnLogin = melonTicket.findId("btnLogin");
+        WebElement inputId = melonTicketService.findId("id");
+        WebElement inputPwd = melonTicketService.findId("pwd");
+        WebElement btnLogin = melonTicketService.findId("btnLogin");
 
         inputId.sendKeys(melonInfo.getId());
         inputPwd.sendKeys(melonInfo.getPwd());
         btnLogin.click();
 
-        WebElement btnLogout = melonTicket.findId("btnLogout");
+        WebElement btnLogout = melonTicketService.findId("btnLogout");
 
         String logout  = btnLogout.getText();
 
@@ -127,17 +126,17 @@ public class MelonLoginTest {
 
         switch (melonInfo.getLoginType()){
             case KAKAO -> {
-                WebElement kakaoBtn = melonTicket.findClass("kakao");
+                WebElement kakaoBtn = melonTicketService.findClass("kakao");
                 kakaoBtn.click();
             }
             case MELON -> {
-                WebElement melonBtn = melonTicket.findClass("melon");
+                WebElement melonBtn = melonTicketService.findClass("melon");
                 melonBtn.click();
             }
         }
 
         int usePageNumber = melonInfo.getLoginType().getUsePageNumber();
-        melonTicket.windowHandler(usePageNumber);
+        melonTicketService.windowHandler(usePageNumber);
     }
 
 
