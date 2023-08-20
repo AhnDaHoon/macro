@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 public class TesseractTest {
-    MelonTicketService melonTicketService = new MelonTicketService();
+    MelonTicketServiceTest melonTicketServiceTest = new MelonTicketServiceTest();
 
     Tesseract tesseract;
 
@@ -20,7 +20,7 @@ public class TesseractTest {
 
     @BeforeEach
     void setupTest() {
-        tesseract = melonTicketService.getTesseract();
+        tesseract = melonTicketServiceTest.getTesseract();
 
     }
 

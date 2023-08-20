@@ -1,6 +1,7 @@
 package com.macro.melon.test.file;
 
 import com.macro.melon.test.MelonTicketService;
+import com.macro.melon.test.MelonTicketServiceTest;
 import org.openqa.selenium.WebElement;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
@@ -14,8 +15,8 @@ import java.util.Date;
 @Component
 public class MelonCaptcha {
 
-    public String imageDownload(MelonTicketService melonTicketService, String folderPath) throws IOException {
-        WebElement captchaImg = melonTicketService.findId("captchaImg");
+    public String imageDownload(MelonTicketServiceTest melonTicketServiceTest, String folderPath) throws IOException {
+        WebElement captchaImg = melonTicketServiceTest.findId("captchaImg");
         String src = captchaImg.getAttribute("src");
 
         String folderWithDate = createFolderWithDate(folderPath);

@@ -1,5 +1,6 @@
 package com.macro.config;
 
+import io.github.bonigarcia.wdm.WebDriverManager;
 import net.sourceforge.tess4j.Tesseract;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -15,6 +16,7 @@ public class MelonConfig {
 
     @Bean
     public WebDriver getMainDriver() {
+        WebDriverManager.chromedriver().setup();
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--disable-popup-blocking");
         WebDriver driver = new ChromeDriver(options);
