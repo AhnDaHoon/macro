@@ -1,6 +1,6 @@
 package com.macro.melon.test;
 
-import com.macro.melon.config.LoginTypeEnum;
+import com.macro.melon.config.LoginTypeEnumTest;
 import lombok.*;
 import org.openqa.selenium.WebElement;
 
@@ -10,7 +10,7 @@ import org.openqa.selenium.WebElement;
 @AllArgsConstructor
 @ToString
 @Builder
-public class MelonInfo {
+public class MelonInfoTest {
     private String id;
 
     private String pwd;
@@ -24,9 +24,9 @@ public class MelonInfo {
     // 티켓 id
     private String prodId;
 
-    private LoginTypeEnum loginType;
+    private LoginTypeEnumTest loginType;
 
-    private MelonTicketService melonTicketService;
+    private MelonTicketServiceTest melonTicketService;
 
     // 티켓 시간 번호 맨위에 있는 시간이 0 그다음 1 +1씩 올라감
     private int ticketTime;

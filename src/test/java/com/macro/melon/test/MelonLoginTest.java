@@ -1,6 +1,6 @@
 package com.macro.melon.test;
 
-import com.macro.melon.config.LoginTypeEnum;
+import com.macro.melon.config.LoginTypeEnumTest;
 import net.sourceforge.tess4j.Tesseract;
 import org.junit.jupiter.api.*;
 import org.openqa.selenium.WebDriver;
@@ -19,15 +19,15 @@ import static org.assertj.core.api.Assertions.assertThat;
 @PropertySource("classpath:test.yml")
 public class MelonLoginTest {
 
-    @Value("${melonId}")
+    @Value("${melon.id}")
     private String id;
 
-    @Value("${melonPwd}")
+    @Value("${melon.pwd}")
     private String pwd;
 
     MelonTicketServiceTest melonTicketServiceTest = new MelonTicketServiceTest();
 
-    MelonInfo melonInfo;
+    MelonInfoTest melonInfoTest;
 
     WebDriver driver;
 
@@ -43,10 +43,10 @@ public class MelonLoginTest {
         wait = melonTicketServiceTest.getWaitDriver();
         tesseract = melonTicketServiceTest.getTesseract();
 
-        melonInfo = MelonInfo.builder()
+        melonInfoTest = MelonInfoTest.builder()
                 .id(id)
                 .pwd(pwd)
-                .loginType(LoginTypeEnum.MELON)
+                .loginType(LoginTypeEnumTest.MELON)
                 .build();
     }
 
@@ -57,7 +57,7 @@ public class MelonLoginTest {
 
     @Test
     void 멜론_티켓_URL_연결() {
-        driver.get(melonInfo.getMelonTicketUrl());
+        driver.get(melonInfoTest.getMelonTicketUrl());
         String title = driver.getTitle();
 
         // Verify
@@ -66,20 +66,20 @@ public class MelonLoginTest {
 
     @Test
     void 멜론_티켓_로그인_페이지_이동(){
-        driver.get(melonInfo.getReserveTicketUrl());
+        driver.get(melonInfoTest.getReserveTicketUrl());
     }
 
     @Test
     void 멜론_티켓_카카오_계정_로그인_버튼_클릭() throws InterruptedException {
-        melonInfo.setLoginType(LoginTypeEnum.KAKAO);
-        moveMelonLoginPage(melonInfo);
+        melonInfoTest.setLoginType(LoginTypeEnumTest.KAKAO);
+        moveMelonLoginPage(melonInfoTest);
 
         String newUrl = driver.getCurrentUrl();
         assertThat(newUrl).contains("https://accounts.kakao.com/login");
     }
     @Test
     void 멜론_티켓_멜론_아이디_로그인_버튼_클릭(){
-        moveMelonLoginPage(melonInfo);
+        moveMelonLoginPage(melonInfoTest);
 
         String newUrl = driver.getCurrentUrl();
         assertThat(newUrl).contains("https://member.melon.com/muid/family/ticket/login/web/login_informM.htm");
@@ -87,15 +87,15 @@ public class MelonLoginTest {
 
     @Test
     void 멜론_티켓_카카오_아이디_로그인(){
-        melonInfo.setLoginType(LoginTypeEnum.KAKAO);
-        moveMelonLoginPage(melonInfo);
+        melonInfoTest.setLoginType(LoginTypeEnumTest.KAKAO);
+        moveMelonLoginPage(melonInfoTest);
 
         WebElement inputId = melonTicketServiceTest.findId("loginId--1");
         WebElement inputPwd = melonTicketServiceTest.findId("password--2");
         WebElement submitBtn = melonTicketServiceTest.findClass("submit");
 
-        inputId.sendKeys(melonInfo.getId());
-        inputPwd.sendKeys(melonInfo.getPwd());
+        inputId.sendKeys(melonInfoTest.getId());
+        inputPwd.sendKeys(melonInfoTest.getPwd());
         submitBtn.click();
 
         // 카카오톡 인증번호 입력은 수동으로 해야함
@@ -104,14 +104,14 @@ public class MelonLoginTest {
     }
     @Test
     void 멜론_티켓_멜론_아이디_로그인(){
-        moveMelonLoginPage(melonInfo);
+        moveMelonLoginPage(melonInfoTest);
 
         WebElement inputId = melonTicketServiceTest.findId("id");
         WebElement inputPwd = melonTicketServiceTest.findId("pwd");
         WebElement btnLogin = melonTicketServiceTest.findId("btnLogin");
 
-        inputId.sendKeys(melonInfo.getId());
-        inputPwd.sendKeys(melonInfo.getPwd());
+        inputId.sendKeys(melonInfoTest.getId());
+        inputPwd.sendKeys(melonInfoTest.getPwd());
         btnLogin.click();
 
         WebElement btnLogout = melonTicketServiceTest.findId("btnLogout");
@@ -121,10 +121,10 @@ public class MelonLoginTest {
         assertThat(logout).contains("로그아웃");
     }
 
-    public void moveMelonLoginPage(MelonInfo melonInfo){
-        driver.get(melonInfo.getLoginUrl());
+    public void moveMelonLoginPage(MelonInfoTest melonInfoTest){
+        driver.get(melonInfoTest.getLoginUrl());
 
-        switch (melonInfo.getLoginType()){
+        switch (melonInfoTest.getLoginType()){
             case KAKAO -> {
                 WebElement kakaoBtn = melonTicketServiceTest.findClass("kakao");
                 kakaoBtn.click();
@@ -135,7 +135,7 @@ public class MelonLoginTest {
             }
         }
 
-        int usePageNumber = melonInfo.getLoginType().getUsePageNumber();
+        int usePageNumber = melonInfoTest.getLoginType().getUsePageNumber();
         melonTicketServiceTest.windowHandler(usePageNumber);
     }
 

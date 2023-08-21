@@ -1,6 +1,6 @@
 package com.macro.melon.test;
 
-import com.macro.melon.config.MelonConfig;
+import com.macro.melon.config.MelonConfigTest;
 import net.sourceforge.tess4j.Tesseract;
 import net.sourceforge.tess4j.TesseractException;
 import org.openqa.selenium.*;
@@ -8,7 +8,6 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Wait;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
@@ -21,11 +20,11 @@ import static org.openqa.selenium.support.ui.ExpectedConditions.numberOfWindowsT
 @Service
 public class MelonTicketServiceTest {
 
-    private AnnotationConfigApplicationContext ct = new AnnotationConfigApplicationContext(MelonConfig.class);
+    private AnnotationConfigApplicationContext ct = new AnnotationConfigApplicationContext(MelonConfigTest.class);
 
-    private WebDriver driver = ct.getBean("getMainDriver", WebDriver.class);
-    private WebDriverWait wait = ct.getBean("getWaitDriver", WebDriverWait.class);
-    private Tesseract tesseract = ct.getBean("getTesseract", Tesseract.class);
+    private WebDriver driver = ct.getBean("getTestMainDriver", WebDriver.class);
+    private WebDriverWait wait = ct.getBean("getTestWaitDriver", WebDriverWait.class);
+    private Tesseract tesseract = ct.getBean("getTestTesseract", Tesseract.class);
 
     private Set<String> newWindowHandles;
 
@@ -57,10 +56,10 @@ public class MelonTicketServiceTest {
         }
     }
 
-    private void moveMelonLoginPage(MelonInfo melonInfo){
-        driver.get(melonInfo.getLoginUrl());
+    private void moveMelonLoginPage(MelonInfoTest melonInfoTest){
+        driver.get(melonInfoTest.getLoginUrl());
 
-        switch (melonInfo.getLoginType()){
+        switch (melonInfoTest.getLoginType()){
             case KAKAO -> {
                 WebElement kakaoBtn = findClass("kakao");
                 kakaoBtn.click();
@@ -71,17 +70,17 @@ public class MelonTicketServiceTest {
             }
         }
 
-        int usePageNumber = melonInfo.getLoginType().getUsePageNumber();
+        int usePageNumber = melonInfoTest.getLoginType().getUsePageNumber();
         windowHandler(usePageNumber);
     }
 
-    public void melonLogin(MelonInfo melonInfo){
-        moveMelonLoginPage(melonInfo);
+    public void melonLogin(MelonInfoTest melonInfoTest){
+        moveMelonLoginPage(melonInfoTest);
 
         WebElement id = findId("id");
         WebElement pwd = findId("pwd");
-        id.sendKeys(melonInfo.getId());
-        pwd.sendKeys(melonInfo.getPwd());
+        id.sendKeys(melonInfoTest.getId());
+        pwd.sendKeys(melonInfoTest.getPwd());
         WebElement btnLogin = findId("btnLogin");
         btnLogin.click();
 
@@ -89,8 +88,8 @@ public class MelonTicketServiceTest {
         String logout = btnLogout.getText();
         assertThat(logout).contains("로그아웃");
 
-        String reserveTicketUrl = melonInfo.getReserveTicketUrl();
-        String prodId = melonInfo.getProdId();
+        String reserveTicketUrl = melonInfoTest.getReserveTicketUrl();
+        String prodId = melonInfoTest.getProdId();
 
         driver.navigate().to(reserveTicketUrl+prodId);
         String ticketReservationBtn = findId("ticketReservation_Btn").getText();
@@ -103,7 +102,7 @@ public class MelonTicketServiceTest {
         }
     }
 
-    public void selectDate(MelonInfo info){
+    public void selectDate(MelonInfoTest info){
         String tagId = info.getTagId();
         String ticketdate = info.getTicketdate();
 
@@ -111,7 +110,7 @@ public class MelonTicketServiceTest {
         dateElement.click();
     }
 
-    public void selectTime(MelonInfo info){
+    public void selectTime(MelonInfoTest info){
         // 날짜의 선택의 경우 여러 개여서 List로 받는다.
         int ticketTime = info.getTicketTime();
 

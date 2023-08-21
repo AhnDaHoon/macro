@@ -1,6 +1,5 @@
 package com.macro.melon.test.file;
 
-import com.macro.melon.test.MelonTicketService;
 import com.macro.melon.test.MelonTicketServiceTest;
 import org.openqa.selenium.WebElement;
 import org.springframework.context.annotation.PropertySource;
@@ -13,7 +12,7 @@ import java.util.Date;
 
 @PropertySource("classpath:test.yml")
 @Component
-public class MelonCaptcha {
+public class MelonCaptchaTest {
 
     public String imageDownload(MelonTicketServiceTest melonTicketServiceTest, String folderPath) throws IOException {
         WebElement captchaImg = melonTicketServiceTest.findId("captchaImg");
