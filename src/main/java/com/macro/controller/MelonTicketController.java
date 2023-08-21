@@ -1,5 +1,4 @@
 package com.macro.controller;
-
 import com.macro.config.LoginTypeEnum;
 import com.macro.dto.MelonInfo;
 import com.macro.dto.MelonUser;
@@ -22,12 +21,20 @@ public class MelonTicketController {
 
     @PostMapping("/login")
     @ResponseBody
-    public String melonLogin(@RequestBody MelonUser melonUser){
-        MelonInfo melonInfo = new MelonInfo();
-        melonInfo.setIdAndPwd(melonUser);
+    public String melonLogin(@ModelAttribute MelonInfo melonInfo){
         melonInfo.setLoginType(LoginTypeEnum.MELON);
 
         melonTicketService.melonLogin(melonInfo);
-        return null;
+        return "로그인 성공";
+    }
+
+    @PostMapping("/ticketing")
+    @ResponseBody
+    public String melonTicketing(@ModelAttribute MelonInfo melonInfo){
+        melonInfo.setLoginType(LoginTypeEnum.MELON);
+        System.out.println("melonInfo = " + melonInfo);
+
+//        melonTicketService.melonLogin(melonInfo);
+        return "티켓팅 성공";
     }
 }

@@ -1,18 +1,12 @@
-function login(){
-    let id = $("#id").val()
-    let pwd = $("#pwd").val();
+function request(requestUrl){
+    let melonLoginForm = $("#melonLoginForm");
+    let melonLoginFormInputs = $("#melonLoginForm input");
+    melonLoginFormInputs.each(function() {
+        !ValidateCheck($(this).val(), $(this).attr('id'))
+    })
 
-    if(!ValidateCheck(id, "id")){
-        return false;
-    }
-    if(!ValidateCheck(pwd, "pwd")){
-        return false;
-    }
+    ajaxRequest(requestUrl, melonLoginForm.serialize());
+}
 
-    let data = {
-      "id" : id,
-      "pwd" : pwd
-    }
-
-    ajaxRequest("/melon/login", data)
+function ticketing(){
 }

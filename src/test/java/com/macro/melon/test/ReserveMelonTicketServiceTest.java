@@ -3,6 +3,7 @@ package com.macro.melon.test;
 import com.macro.melon.config.LoginTypeEnumTest;
 import com.macro.melon.test.file.MelonCaptchaTest;
 import com.macro.melon.test.seat.MelonSeatTest;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.WebDriver;
@@ -73,10 +74,10 @@ public class ReserveMelonTicketServiceTest{
                 .build();
     }
 
-//    @AfterEach
-//    void teardown() {
-//        driver.quit();
-//    }
+    @AfterEach
+    void teardown() {
+        driver.quit();
+    }
 
     @Test
     void 예매_사이트_이동(){

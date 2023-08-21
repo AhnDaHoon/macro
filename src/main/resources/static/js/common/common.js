@@ -1,14 +1,12 @@
 function ajaxRequest(requestUrl, requestData){
-    let jsonData = JSON.stringify(requestData);
-    console.log(jsonData)
     console.log(requestUrl)
+    console.log(requestData)
+    console.log(JSON.stringify(requestData))
 
     $.ajax({
-        type : 'post',
+        type : "post",
         url : requestUrl,
-        dataType : 'json',
-        contentType: 'application/json',
-        data : jsonData,
+        data : requestData,
         success : function(result) {
             console.log(result);
         },
