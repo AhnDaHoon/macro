@@ -1,5 +1,6 @@
 package com.macro.service;
 
+import com.macro.config.CalendarTypeEnum;
 import com.macro.config.MelonConfig;
 import com.macro.dto.MelonInfo;
 import net.sourceforge.tess4j.Tesseract;
@@ -15,6 +16,7 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 import org.springframework.stereotype.Service;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.Set;
 
@@ -90,7 +92,6 @@ public class MelonTicketService {
 
     }
 
-
     public void moveReservePage(MelonInfo melonInfo){
         String reserveTicketUrl = melonInfo.getReserveTicketUrl();
         String prodId = melonInfo.getProdId();
@@ -105,12 +106,19 @@ public class MelonTicketService {
         }
 
     }
-    public void selectDate(MelonInfo info){
-        String tagId = info.getTagId();
-        String ticketdate = info.getTicketDate();
+    public void selectDate(MelonInfo melonInfo){
+        String tagId = melonInfo.getCalendarType().getDateType();
+        String ticketdate = melonInfo.getTicketDate();
+
+        changeCalendarType(melonInfo.getCalendarType());
 
         WebElement dateElement = findId(tagId + ticketdate);
         dateElement.click();
+    }
+
+    public void changeCalendarType(CalendarTypeEnum calendarTypeEnumTest){
+        WebElement dateTypeBtn = findClass(calendarTypeEnumTest.getBtnClassName());
+        dateTypeBtn.click();
     }
 
     public void selectTime(MelonInfo info){
@@ -158,6 +166,12 @@ public class MelonTicketService {
 
     public List<WebElement> findTagList(String name){
         By by = By.tagName(name);
+        waitElement(by);
+        return driver.findElements(by);
+    }
+
+    public List<WebElement> findMelonRect(String name){
+        By by = By.cssSelector(name);
         waitElement(by);
         return driver.findElements(by);
     }
@@ -247,5 +261,52 @@ public class MelonTicketService {
         WebElement btnComplete = findId("btnComplete");
         btnComplete.click();
     }
+
+//    public boolean ReserveMelonTicket(MelonInfo melonInfo){
+//        int rsrvVolume = melonInfo.getRsrvVolume();
+//
+//        // 로그인
+//        melonLogin(melonInfo);
+//
+//        // 날짜 선택
+//        selectDate(melonInfo);
+//
+//        // 시간 선택
+//        selectTime(melonInfo);
+//
+//        // 예매하기 버튼 클릭
+//        findId("ticketReservation_Btn").click();
+//
+//        // 좌석 선택 페이지 대기
+//        wait.until(ExpectedConditions.numberOfWindowsToBe(2));
+//        windowHandler(2);
+//        System.out.println("새로운 페이지 감지");
+//
+//        try {
+//            String targetFileName = file.imageDownload(melonTicketServiceTest, folderPath);
+//            melonTicketService.captchaVerification(targetFileName);
+//            WebElement errorMessage = melonTicketService.findId("errorMessage");
+//            boolean displayed = errorMessage.isDisplayed();
+//
+//            while (displayed){
+//                WebElement btnReload = melonTicketService.findId("btnReload");
+//                btnReload.click();
+//
+//                // 클릭하고 텀을 주고 이미지를 다운로드 (이렇게 안하면 새로고침 이전 이미지를 다운로드함)
+//                Thread.sleep(500);
+//                targetFileName = file.imageDownload(melonTicketService, folderPath);
+//
+//                System.out.println("targetFileName = " + targetFileName);
+//                melonTicketService.captchaVerification(targetFileName);
+//                displayed = errorMessage.isDisplayed();
+//            }
+//        } catch (IOException e) {
+//            System.out.println("e = " + e);
+//        } catch (InterruptedException e) {
+//            throw new RuntimeException(e);
+//        }
+//
+//        melonSeat.selectSeat(melonInfo);
+//    }
 
 }

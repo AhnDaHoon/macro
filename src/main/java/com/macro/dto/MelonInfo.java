@@ -1,5 +1,6 @@
 package com.macro.dto;
 
+import com.macro.config.CalendarTypeEnum;
 import com.macro.config.LoginTypeEnum;
 import com.macro.service.MelonTicketService;
 import lombok.*;
@@ -26,6 +27,8 @@ public class MelonInfo {
     private String prodId;
 
     private LoginTypeEnum loginType;
+
+    private CalendarTypeEnum calendarType;
 
     private MelonTicketService melonTicketService;
 

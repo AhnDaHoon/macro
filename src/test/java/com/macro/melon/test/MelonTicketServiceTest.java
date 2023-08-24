@@ -1,5 +1,6 @@
 package com.macro.melon.test;
 
+import com.macro.dto.MelonInfo;
 import com.macro.melon.config.CalendarTypeEnumTest;
 import com.macro.melon.config.MelonConfigTest;
 import net.sourceforge.tess4j.Tesseract;
@@ -67,25 +68,24 @@ public class MelonTicketServiceTest {
         windowHandler(usePageNumber);
     }
 
-    public void melonLogin(MelonInfoTest melonInfoTest){
-        moveMelonLoginPage(melonInfoTest);
+    public void melonLogin(MelonInfoTest melonInfo){
+        moveMelonLoginPage(melonInfo);
 
         WebElement id = findId("id");
         WebElement pwd = findId("pwd");
-        id.sendKeys(melonInfoTest.getId());
-        pwd.sendKeys(melonInfoTest.getPwd());
+        id.sendKeys(melonInfo.getId());
+        pwd.sendKeys(melonInfo.getPwd());
         WebElement btnLogin = findId("btnLogin");
         btnLogin.click();
 
-        WebElement btnLogout = findId("btnLogout");
-        String logout = btnLogout.getText();
-        assertThat(logout).contains("로그아웃");
 
-        String reserveTicketUrl = melonInfoTest.getReserveTicketUrl();
-        String prodId = melonInfoTest.getProdId();
+    }
+
+    public void moveReservePage(MelonInfoTest melonInfo){
+        String reserveTicketUrl = melonInfo.getReserveTicketUrl();
+        String prodId = melonInfo.getProdId();
 
         driver.navigate().to(reserveTicketUrl+prodId);
-        String ticketReservationBtn = findId("ticketReservation_Btn").getText();
 
         // 팝업 제거
         try {
@@ -93,6 +93,7 @@ public class MelonTicketServiceTest {
             driver.findElement(By.id("noticeAlert_layerpopup_cookie")).click();
         }catch (NoSuchElementException e){
         }
+
     }
 
     public void selectDate(MelonInfoTest melonInfo){

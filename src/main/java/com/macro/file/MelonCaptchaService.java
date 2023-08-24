@@ -2,16 +2,16 @@ package com.macro.file;
 
 import com.macro.service.MelonTicketService;
 import org.openqa.selenium.WebElement;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.Base64;
 import java.util.Date;
 
-@Component
-public class MelonCaptcha {
+@Service
+public class MelonCaptchaService {
 
     public String imageDownload(MelonTicketService melonTicket, String folderPath) throws IOException {
         WebElement captchaImg = melonTicket.findId("captchaImg");

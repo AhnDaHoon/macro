@@ -91,6 +91,9 @@ public class ReserveMelonTicketServiceTest{
     void 예매_사이트_이동(){
         settingListDate();
         melonTicketServiceTest.melonLogin(melonInfoTest);
+
+        // 페이지 이동
+        melonTicketServiceTest.moveReservePage(melonInfoTest);
     }
 
     /**
@@ -100,6 +103,9 @@ public class ReserveMelonTicketServiceTest{
     void 팝업이_있을_때_제거_클릭(){
         melonInfoTest.setProdId("208514");
         melonTicketServiceTest.melonLogin(melonInfoTest);
+
+        // 페이지 이동
+        melonTicketServiceTest.moveReservePage(melonInfoTest);
     }
 
     @Test
@@ -107,6 +113,8 @@ public class ReserveMelonTicketServiceTest{
         settingListDate();
 
         melonTicketServiceTest.melonLogin(melonInfoTest);
+
+        melonTicketServiceTest.moveReservePage(melonInfoTest);
 
         melonTicketServiceTest.selectDate(melonInfoTest);
 
@@ -130,6 +138,8 @@ public class ReserveMelonTicketServiceTest{
         settingListDate();
         melonInfoTest.setRsrvVolume(3);
         melonTicketServiceTest.melonLogin(melonInfoTest);
+
+        melonTicketServiceTest.moveReservePage(melonInfoTest);
 
         melonTicketServiceTest.selectDate(melonInfoTest);
 
@@ -157,6 +167,9 @@ public class ReserveMelonTicketServiceTest{
 
         // 로그인
         melonTicketServiceTest.melonLogin(melonInfoTest);
+
+        // 페이지 이동
+        melonTicketServiceTest.moveReservePage(melonInfoTest);
 
         // 날짜 선택
         melonTicketServiceTest.selectDate(melonInfoTest);
@@ -194,6 +207,9 @@ public class ReserveMelonTicketServiceTest{
 
         // 로그인
         melonTicketServiceTest.melonLogin(melonInfoTest);
+
+        // 페이지 이동
+        melonTicketServiceTest.moveReservePage(melonInfoTest);
 
         // 날짜 선택
         melonTicketServiceTest.selectDate(melonInfoTest);
@@ -247,6 +263,9 @@ public class ReserveMelonTicketServiceTest{
         // 로그인
         melonTicketServiceTest.melonLogin(melonInfoTest);
 
+        // 페이지 이동
+        melonTicketServiceTest.moveReservePage(melonInfoTest);
+
         // 날짜 선택
         melonTicketServiceTest.selectDate(melonInfoTest);
 
@@ -287,6 +306,10 @@ public class ReserveMelonTicketServiceTest{
 
         // 로그인
         melonTicketServiceTest.melonLogin(melonInfoTest);
+
+        // 페이지 이동
+        melonTicketServiceTest.moveReservePage(melonInfoTest);
+
 
         // 날짜 선택
         melonTicketServiceTest.selectDate(melonInfoTest);
