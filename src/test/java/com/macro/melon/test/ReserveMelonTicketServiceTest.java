@@ -1,5 +1,6 @@
 package com.macro.melon.test;
 
+import com.macro.melon.config.CalendarTypeEnumTest;
 import com.macro.melon.config.LoginTypeEnumTest;
 import com.macro.melon.test.file.MelonCaptchaTest;
 import com.macro.melon.test.seat.MelonSeatTest;
@@ -48,16 +49,23 @@ public class ReserveMelonTicketServiceTest{
     Wait<WebDriver> wait;
 
     void settingListDate(){
-        melonInfoTest.setTagId("dateSelect_");
+        melonInfoTest.setCalendarType(CalendarTypeEnumTest.LIST);
         melonInfoTest.setProdId("208510");
         melonInfoTest.setTicketdate("20230909");
         melonInfoTest.setTicketTime(0);
     }
 
     void settingCalendarDate(){
-        melonInfoTest.setTagId("calendar_SelectId_");
+        melonInfoTest.setCalendarType(CalendarTypeEnumTest.CALENDAR);
         melonInfoTest.setProdId("208169");
         melonInfoTest.setTicketdate("20230822");
+        melonInfoTest.setTicketTime(0);
+    }
+
+    void settingCommonDate(){
+        melonInfoTest.setCalendarType(CalendarTypeEnumTest.LIST);
+        melonInfoTest.setProdId("208419");
+        melonInfoTest.setTicketdate("20230908");
         melonInfoTest.setTicketTime(0);
     }
 
@@ -74,10 +82,10 @@ public class ReserveMelonTicketServiceTest{
                 .build();
     }
 
-    @AfterEach
-    void teardown() {
-        driver.quit();
-    }
+//    @AfterEach
+//    void teardown() {
+//        driver.quit();
+//    }
 
     @Test
     void 예매_사이트_이동(){
@@ -93,48 +101,6 @@ public class ReserveMelonTicketServiceTest{
         melonInfoTest.setProdId("208514");
         melonTicketServiceTest.melonLogin(melonInfoTest);
     }
-
-    @Test
-    void 리스트_날짜_선택(){
-        settingListDate();
-
-        melonTicketServiceTest.melonLogin(melonInfoTest);
-
-        melonTicketServiceTest.selectDate(melonInfoTest);
-    }
-
-    @Test
-    void 캘린더_날짜_선택(){
-        settingCalendarDate();
-
-        melonTicketServiceTest.melonLogin(melonInfoTest);
-
-        melonTicketServiceTest.selectDate(melonInfoTest);
-    }
-
-    @Test
-    void 리스트_시간_선택(){
-        settingListDate();
-
-        melonTicketServiceTest.melonLogin(melonInfoTest);
-
-        melonTicketServiceTest.selectDate(melonInfoTest);
-
-        melonTicketServiceTest.selectTime(melonInfoTest);
-    }
-
-    @Test
-    void 캘린더_시간_선택(){
-        settingCalendarDate();
-
-        melonTicketServiceTest.melonLogin(melonInfoTest);
-
-        melonTicketServiceTest.selectDate(melonInfoTest);
-
-        melonTicketServiceTest.selectTime(melonInfoTest);
-
-    }
-
 
     @Test
     void 예매하기_버튼_클릭(){
@@ -314,11 +280,9 @@ public class ReserveMelonTicketServiceTest{
 
     @Test
     void 캡쳐_이미지_입력_및_좌석_선택(){
-        settingListDate();
+        settingCommonDate();
         // 예매할 좌석 갯수
-        melonInfoTest.setRsrvVolume(3);
-        melonInfoTest.setProdId("208593");
-        melonInfoTest.setTicketdate("20230902");
+        melonInfoTest.setRsrvVolume(2);
         int rsrvVolume = melonInfoTest.getRsrvVolume();
 
         // 로그인

@@ -1,5 +1,6 @@
 package com.macro.melon.test;
 
+import com.macro.melon.config.CalendarTypeEnumTest;
 import com.macro.melon.config.MelonConfigTest;
 import net.sourceforge.tess4j.Tesseract;
 import net.sourceforge.tess4j.TesseractException;
@@ -102,12 +103,19 @@ public class MelonTicketServiceTest {
         }
     }
 
-    public void selectDate(MelonInfoTest info){
-        String tagId = info.getTagId();
-        String ticketdate = info.getTicketdate();
+    public void selectDate(MelonInfoTest melonInfo){
+        String tagId = melonInfo.getCalendarType().getDateType();
+        String ticketdate = melonInfo.getTicketdate();
+
+        changeCalendarType(melonInfo.getCalendarType());
 
         WebElement dateElement = findId(tagId + ticketdate);
         dateElement.click();
+    }
+
+    public void changeCalendarType(CalendarTypeEnumTest calendarTypeEnumTest){
+        WebElement dateTypeBtn = findClass(calendarTypeEnumTest.getBtnClassName());
+        dateTypeBtn.click();
     }
 
     public void selectTime(MelonInfoTest info){

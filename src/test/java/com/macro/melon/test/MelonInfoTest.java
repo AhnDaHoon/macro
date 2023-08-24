@@ -1,5 +1,6 @@
 package com.macro.melon.test;
 
+import com.macro.melon.config.CalendarTypeEnumTest;
 import com.macro.melon.config.LoginTypeEnumTest;
 import lombok.*;
 import org.openqa.selenium.WebElement;
@@ -25,6 +26,8 @@ public class MelonInfoTest {
     private String prodId;
 
     private LoginTypeEnumTest loginType;
+
+    private CalendarTypeEnumTest calendarType;
 
     private MelonTicketServiceTest melonTicketService;
 
