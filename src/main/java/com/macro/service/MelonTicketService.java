@@ -182,18 +182,6 @@ public class MelonTicketService {
         return driver.findElement(by);
     }
 
-    // 새로운 페이지가 감지될 때까지 while 문 돌리는 메서드, 메서드명 고민 중...
-    public void newPage (){
-        boolean isNotFound = true;
-        while (isNotFound){
-            if(driver.getWindowHandles().size() > 1){
-                Set<String> elementSet = driver.getWindowHandles();
-                isNotFound = false;
-            }
-            System.out.println("not found");
-        }
-    }
-
     public void waitElement(By by){
         try {
             // 조건 충족까지 대기하고 요소를 찾음
@@ -261,52 +249,4 @@ public class MelonTicketService {
         WebElement btnComplete = findId("btnComplete");
         btnComplete.click();
     }
-
-//    public boolean ReserveMelonTicket(MelonInfo melonInfo){
-//        int rsrvVolume = melonInfo.getRsrvVolume();
-//
-//        // 로그인
-//        melonLogin(melonInfo);
-//
-//        // 날짜 선택
-//        selectDate(melonInfo);
-//
-//        // 시간 선택
-//        selectTime(melonInfo);
-//
-//        // 예매하기 버튼 클릭
-//        findId("ticketReservation_Btn").click();
-//
-//        // 좌석 선택 페이지 대기
-//        wait.until(ExpectedConditions.numberOfWindowsToBe(2));
-//        windowHandler(2);
-//        System.out.println("새로운 페이지 감지");
-//
-//        try {
-//            String targetFileName = file.imageDownload(melonTicketServiceTest, folderPath);
-//            melonTicketService.captchaVerification(targetFileName);
-//            WebElement errorMessage = melonTicketService.findId("errorMessage");
-//            boolean displayed = errorMessage.isDisplayed();
-//
-//            while (displayed){
-//                WebElement btnReload = melonTicketService.findId("btnReload");
-//                btnReload.click();
-//
-//                // 클릭하고 텀을 주고 이미지를 다운로드 (이렇게 안하면 새로고침 이전 이미지를 다운로드함)
-//                Thread.sleep(500);
-//                targetFileName = file.imageDownload(melonTicketService, folderPath);
-//
-//                System.out.println("targetFileName = " + targetFileName);
-//                melonTicketService.captchaVerification(targetFileName);
-//                displayed = errorMessage.isDisplayed();
-//            }
-//        } catch (IOException e) {
-//            System.out.println("e = " + e);
-//        } catch (InterruptedException e) {
-//            throw new RuntimeException(e);
-//        }
-//
-//        melonSeat.selectSeat(melonInfo);
-//    }
-
 }

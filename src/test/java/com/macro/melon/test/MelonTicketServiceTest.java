@@ -172,18 +172,6 @@ public class MelonTicketServiceTest {
         return driver.findElement(by);
     }
 
-    // 새로운 페이지가 감지될 때까지 while 문 돌리는 메서드, 메서드명 고민 중...
-    public void newPage (){
-        boolean isNotFound = true;
-        while (isNotFound){
-            if(driver.getWindowHandles().size() > 1){
-                Set<String> elementSet = driver.getWindowHandles();
-                isNotFound = false;
-            }
-            System.out.println("not found");
-        }
-    }
-
     public void waitElement(By by){
         try {
             // 조건 충족까지 대기하고 요소를 찾음
