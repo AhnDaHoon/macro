@@ -60,16 +60,8 @@ public class MelonTicketServiceTest {
     private void moveMelonLoginPage(MelonInfoTest melonInfoTest){
         driver.get(melonInfoTest.getLoginUrl());
 
-        switch (melonInfoTest.getLoginType()){
-            case KAKAO -> {
-                WebElement kakaoBtn = findClass("kakao");
-                kakaoBtn.click();
-            }
-            case MELON -> {
-                WebElement melonBtn = findClass("melon");
-                melonBtn.click();
-            }
-        }
+        WebElement kakaoBtn = findClass(melonInfoTest.getLoginType().getLoginType());
+        kakaoBtn.click();
 
         int usePageNumber = melonInfoTest.getLoginType().getUsePageNumber();
         windowHandler(usePageNumber);
@@ -167,6 +159,12 @@ public class MelonTicketServiceTest {
         return driver.findElements(by);
     }
 
+    public List<WebElement> findMelonRect(String name){
+        By by = By.cssSelector(name);
+        waitElement(by);
+        return driver.findElements(by);
+    }
+
     public WebElement findFrame(String name){
         By by = By.id(name);
         waitElement(by);
@@ -236,7 +234,12 @@ public class MelonTicketServiceTest {
         if(result.equals("TesseractException") || result.equals("not exist")){
             return result;
         }
-        return result.substring(0, 6);
+
+        if(result.length() > 6){
+            return result.substring(0, 6);
+        }
+
+        return result;
 
 
     }

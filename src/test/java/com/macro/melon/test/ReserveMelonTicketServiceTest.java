@@ -64,8 +64,8 @@ public class ReserveMelonTicketServiceTest{
 
     void settingCommonDate(){
         melonInfoTest.setCalendarType(CalendarTypeEnumTest.LIST);
-        melonInfoTest.setProdId("208419");
-        melonInfoTest.setTicketdate("20230908");
+        melonInfoTest.setProdId("208339");
+        melonInfoTest.setTicketdate("20230830");
         melonInfoTest.setTicketTime(0);
     }
 

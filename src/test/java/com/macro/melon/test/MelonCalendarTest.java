@@ -49,8 +49,8 @@ public class MelonCalendarTest {
 
     void settingCommonDate(){
         melonInfoTest.setCalendarType(CalendarTypeEnumTest.LIST);
-        melonInfoTest.setProdId("208419");
-        melonInfoTest.setTicketdate("20230908");
+        melonInfoTest.setProdId("208623");
+        melonInfoTest.setTicketdate("20230923");
         melonInfoTest.setTicketTime(0);
     }
 

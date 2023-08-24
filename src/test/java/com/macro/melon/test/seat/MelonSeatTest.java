@@ -4,6 +4,8 @@ import com.macro.melon.config.TripleTest;
 import com.macro.melon.test.MelonInfoTest;
 import com.macro.melon.test.MelonTicketServiceTest;
 import lombok.RequiredArgsConstructor;
+import org.openqa.selenium.Alert;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.springframework.stereotype.Component;
 
@@ -27,46 +29,57 @@ public class MelonSeatTest {
         changeFrame();
 
         int rsrvVolume = melonInfoTest.getRsrvVolume();
-        List<WebElement> rectElements = melonTicketServiceTest.findTagList("rect");
+//        List<WebElement> rectElements = melonTicketServiceTest.findTagList("rect");
+
+        String cssSelector = "rect:not([fill='#DDDDDD']):not([fill='none'])";
+        List<WebElement> rectElements = melonTicketServiceTest.findMelonRect(cssSelector);
 
         List<TripleTest> coordinates = new ArrayList<>();
         List<WebElement> seatList = new ArrayList<>();
 
-        for (WebElement rect : rectElements) {
-            if(rect.getAttribute("fill").equals("#DDDDDD") && !rect.getAttribute("fill").equals("none")){
-                continue;
-            }
-            coordinates.add(new TripleTest((int) Math.floor(Float.parseFloat(rect.getAttribute("y"))),
-                    (int) Math.floor(Float.parseFloat(rect.getAttribute("x"))),
+        rectElements.parallelStream().forEach(rect -> {
+            coordinates.add(new TripleTest(Float.parseFloat(rect.getAttribute("y")),
+                    Float.parseFloat(rect.getAttribute("x")),
                     rect));
-
-//            if(coordinates.size() >= 100) break;
-        }
+        });
 
         Collections.sort(coordinates, Comparator.comparingDouble(TripleTest::getY));
 
-        float seatX = 0;
-        for (TripleTest triple : coordinates) {
-            if(seatList.size() > 0){
-                if(triple.getX() - seatX == 13){
+        if(melonInfoTest.getRsrvVolume() == 1){
+            seatList.add(coordinates.get(0).getRect());
+        }else{
+            float seatX = 0;
+            for (TripleTest triple : coordinates) {
+                if(seatList.size() > 0){
+                    if(Math.floor(triple.getX()) - Math.floor(seatX) == 13){
+                        seatList.add(triple.getRect());
+                    }else {
+                        seatList.clear();
+                    }
+                }else{
                     seatList.add(triple.getRect());
-                }else {
-                    seatList.clear();
                 }
-            }else{
-                seatList.add(triple.getRect());
-            }
 
-            if(seatList.size() >= rsrvVolume){
-                break;
+                if(seatList.size() >= rsrvVolume){
+                    break;
+                }
+                seatX = triple.getX();
             }
-            seatX = triple.getX();
         }
 
         for (WebElement webElement : seatList) {
             webElement.click();
         }
+        System.out.println("태그 좌석 클리함");
 
         melonTicketServiceTest.findId("nextTicketSelection").click();
+    }
+
+    // 이선자 클릭
+    public void clickAlert(MelonTicketServiceTest melonTicketServiceTest){
+        WebDriver driver = melonTicketServiceTest.getMainDriver();
+
+        Alert alert = driver.switchTo().alert();
+        alert.accept();
     }
 }
