@@ -5,10 +5,7 @@ import com.macro.config.MelonConfig;
 import com.macro.dto.MelonInfo;
 import net.sourceforge.tess4j.Tesseract;
 import net.sourceforge.tess4j.TesseractException;
-import org.openqa.selenium.By;
-import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Wait;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -128,6 +125,14 @@ public class MelonTicketService {
         List<WebElement> itemTimeList = findClassList("item_time");
         itemTimeList.get(ticketTime).click();
 
+    }
+
+    public void selectDateAndTimeClick(String javascriptCode){
+        JavascriptExecutor jsExecutor = (JavascriptExecutor) driver;
+
+        // 자바스크립트 코드 실행
+        String jsCode = javascriptCode;
+        jsExecutor.executeScript(jsCode);
     }
 
     public WebElement findClass(String name){

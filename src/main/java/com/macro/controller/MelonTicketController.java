@@ -24,6 +24,9 @@ public class MelonTicketController {
     @Value("${melon.folderPath}")
     private String folderPath;
 
+    @Value("${melon.javascriptCode}")
+    private String javascriptCode;
+
     @Autowired
     private MelonTicketService melonTicketService;
 
@@ -44,28 +47,18 @@ public class MelonTicketController {
         melonInfo.setLoginType(LoginTypeEnum.MELON);
 
         melonTicketService.melonLogin(melonInfo);
+
+        melonTicketService.moveReservePage(melonInfo);
         return "로그인 성공";
     }
 
     @PostMapping("/ticketing")
     @ResponseBody
     public String melonTicketing(@ModelAttribute MelonInfo melonInfo){
-        System.out.println("melonInfo = " + melonInfo);
-
-        melonInfo.setLoginType(LoginTypeEnum.MELON);
-        melonInfo.setCalendarType(CalendarTypeEnum.LIST);
-
-        int rsrvVolume = melonInfo.getRsrvVolume();
-        melonTicketService.moveReservePage(melonInfo);
-
         // 날짜 선택
-        melonTicketService.selectDate(melonInfo);
-
         // 시간 선택
-        melonTicketService.selectTime(melonInfo);
-
         // 예매하기 버튼 클릭
-        melonTicketService.findId("ticketReservation_Btn").click();
+        melonTicketService.selectDateAndTimeClick(javascriptCode);
 
         Wait<WebDriver> wait = melonTicketService.getWaitDriver();
         // 좌석 선택 페이지 대기

@@ -36,6 +36,9 @@ public class ReserveMelonTicketServiceTest{
     @Value("${melon.folderPath}")
     private String folderPath;
 
+    @Value("${melon.javascriptCode}")
+    private String javascriptCode;
+
     MelonTicketServiceTest melonTicketServiceTest = new MelonTicketServiceTest();
 
     MelonCaptchaTest file = new MelonCaptchaTest();
@@ -64,8 +67,15 @@ public class ReserveMelonTicketServiceTest{
 
     void settingCommonDate(){
         melonInfoTest.setCalendarType(CalendarTypeEnumTest.LIST);
-        melonInfoTest.setProdId("208339");
-        melonInfoTest.setTicketdate("20230830");
+        melonInfoTest.setProdId("208505");
+        melonInfoTest.setTicketdate("20230826");
+        melonInfoTest.setTicketTime(1);
+    }
+
+    void settingJavascript(){
+        melonInfoTest.setCalendarType(CalendarTypeEnumTest.LIST);
+        melonInfoTest.setProdId("208505");
+        melonInfoTest.setTicketdate("0");
         melonInfoTest.setTicketTime(0);
     }
 
@@ -310,7 +320,6 @@ public class ReserveMelonTicketServiceTest{
         // 페이지 이동
         melonTicketServiceTest.moveReservePage(melonInfoTest);
 
-
         // 날짜 선택
         melonTicketServiceTest.selectDate(melonInfoTest);
 
@@ -346,7 +355,57 @@ public class ReserveMelonTicketServiceTest{
         } catch (IOException e) {
             System.out.println("e = " + e);
         } catch (InterruptedException e) {
-            throw new RuntimeException(e);
+            System.out.println("e = " + e);
+        }
+
+        melonSeatTest.selectSeat(melonInfoTest);
+    }
+
+    @Test
+    void 캡쳐_이미지_입력_및_좌석_선택2_javascript_조작_예약(){
+        settingJavascript();
+        // 예매할 좌석 갯수
+        melonInfoTest.setRsrvVolume(2);
+        int rsrvVolume = melonInfoTest.getRsrvVolume();
+
+        // 로그인
+        melonTicketServiceTest.melonLogin(melonInfoTest);
+
+        // 페이지 이동
+        melonTicketServiceTest.moveReservePage(melonInfoTest);
+
+        // 날짜 선택
+        // 시간 선택
+        // 예매하기 버튼 클릭
+        melonTicketServiceTest.selectDateAndTimeClick(javascriptCode);
+
+        // 좌석 선택 페이지 대기
+        wait.until(ExpectedConditions.numberOfWindowsToBe(2));
+        melonTicketServiceTest.windowHandler(2);
+        System.out.println("새로운 페이지 감지");
+
+        try {
+            String targetFileName = file.imageDownload(melonTicketServiceTest, folderPath);
+            melonTicketServiceTest.captchaVerification(targetFileName);
+            WebElement errorMessage = melonTicketServiceTest.findId("errorMessage");
+            boolean displayed = errorMessage.isDisplayed();
+
+            while (displayed){
+                WebElement btnReload = melonTicketServiceTest.findId("btnReload");
+                btnReload.click();
+
+                // 클릭하고 텀을 주고 이미지를 다운로드 (이렇게 안하면 새로고침 이전 이미지를 다운로드함)
+                Thread.sleep(500);
+                targetFileName = file.imageDownload(melonTicketServiceTest, folderPath);
+
+                System.out.println("targetFileName = " + targetFileName);
+                melonTicketServiceTest.captchaVerification(targetFileName);
+                displayed = errorMessage.isDisplayed();
+            }
+        } catch (IOException e) {
+            System.out.println("e = " + e);
+        } catch (InterruptedException e) {
+            System.out.println("e = " + e);
         }
 
         melonSeatTest.selectSeat(melonInfoTest);

@@ -120,6 +120,14 @@ public class MelonTicketServiceTest {
 
     }
 
+    public void selectDateAndTimeClick(String javascriptCode){
+        JavascriptExecutor jsExecutor = (JavascriptExecutor) driver;
+
+        // 자바스크립트 코드 실행
+        String jsCode = javascriptCode;
+        jsExecutor.executeScript(jsCode);
+    }
+
     public WebElement findClass(String name){
         By by = By.className(name);
         waitElement(by);
