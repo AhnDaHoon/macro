@@ -26,9 +26,11 @@ public class MelonSeatTest {
         melonTicketServiceTest.switchFrame(oneStopFrame);
     }
 
-    public void selectSeat(MelonInfoTest melonInfoTest){
-        changeFrame();
+    public void selectArea(MelonInfoTest melonInfoTest){
 
+    }
+
+    public void selectSeat(MelonInfoTest melonInfoTest){
         int rsrvVolume = melonInfoTest.getRsrvVolume();
 //        List<WebElement> rectElements = melonTicketServiceTest.findTagList("rect");
 
@@ -67,7 +69,7 @@ public class MelonSeatTest {
 
     public List<TripleTest> findSeat(){
         String cssSelector = "rect:not([fill='#DDDDDD']):not([fill='none'])";
-        List<WebElement> rectElements = melonTicketServiceTest.findMelonRect(cssSelector);
+        List<WebElement> rectElements = melonTicketServiceTest.findCssSelectorList(cssSelector);
 
         List<TripleTest> coordinates = new ArrayList<>();
 

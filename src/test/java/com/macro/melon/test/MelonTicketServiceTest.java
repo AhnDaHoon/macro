@@ -168,7 +168,13 @@ public class MelonTicketServiceTest {
         return driver.findElements(by);
     }
 
-    public List<WebElement> findMelonRect(String name){
+    public WebElement findCssSelector(String name){
+        By by = By.cssSelector(name);
+        waitElement(by);
+        return driver.findElement(by);
+    }
+
+    public List<WebElement> findCssSelectorList(String name){
         By by = By.cssSelector(name);
         waitElement(by);
         return driver.findElements(by);

@@ -7,6 +7,7 @@ import com.macro.melon.test.seat.MelonSeatTest;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -16,6 +17,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.PropertySource;
 
 import java.io.IOException;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -74,7 +76,7 @@ public class ReserveMelonTicketServiceTest{
 
     void settingJavascript(){
         melonInfoTest.setCalendarType(CalendarTypeEnumTest.LIST);
-        melonInfoTest.setProdId("208505");
+        melonInfoTest.setProdId("208619");
         melonInfoTest.setTicketdate("0");
         melonInfoTest.setTicketTime(0);
     }
@@ -408,6 +410,83 @@ public class ReserveMelonTicketServiceTest{
             System.out.println("e = " + e);
         }
 
+        melonSeatTest.selectSeat(melonInfoTest);
+    }
+
+    @Test
+    void 구역_선택이_나올_경우_구역_먼저_클릭_후_좌석_선택() {
+        settingJavascript();
+        // 예매할 좌석 갯수
+        melonInfoTest.setRsrvVolume(2);
+        int rsrvVolume = melonInfoTest.getRsrvVolume();
+
+        // 로그인
+        melonTicketServiceTest.melonLogin(melonInfoTest);
+
+        // 페이지 이동
+        melonTicketServiceTest.moveReservePage(melonInfoTest);
+
+        // 날짜 선택
+        // 시간 선택
+        // 예매하기 버튼 클릭
+        melonTicketServiceTest.selectDateAndTimeClick(javascriptCode);
+
+        // 좌석 선택 페이지 대기
+        wait.until(ExpectedConditions.numberOfWindowsToBe(2));
+        melonTicketServiceTest.windowHandler(2);
+        System.out.println("새로운 페이지 감지");
+
+        try {
+            String targetFileName = file.imageDownload(melonTicketServiceTest, folderPath);
+            melonTicketServiceTest.captchaVerification(targetFileName);
+            WebElement errorMessage = melonTicketServiceTest.findId("errorMessage");
+            boolean displayed = errorMessage.isDisplayed();
+
+            while (displayed) {
+                WebElement btnReload = melonTicketServiceTest.findId("btnReload");
+                btnReload.click();
+
+                // 클릭하고 텀을 주고 이미지를 다운로드 (이렇게 안하면 새로고침 이전 이미지를 다운로드함)
+                Thread.sleep(500);
+                targetFileName = file.imageDownload(melonTicketServiceTest, folderPath);
+
+                System.out.println("targetFileName = " + targetFileName);
+                melonTicketServiceTest.captchaVerification(targetFileName);
+                displayed = errorMessage.isDisplayed();
+            }
+        } catch (IOException e) {
+            System.out.println("e = " + e);
+        } catch (InterruptedException e) {
+            System.out.println("e = " + e);
+        }
+
+        // 좌석 선택이 아닌 구역 선택이 나왔을 경우
+        melonSeatTest.changeFrame();
+        try {
+            WebElement boxStage = driver.findElement(By.className("box_stage"));
+            System.out.println("boxStage = " + boxStage);
+
+            // 오른쪽 하단에 좌석 onclick='goSummary' 속성을 가진 tr 태그들을 선택을해 줘야 좌석이 elements에서 조회가 되기 때문에 전부 다 클릭해 준다.
+            List<WebElement> goSummaryList = melonTicketServiceTest.findCssSelectorList("[onclick*='goSummary']");
+            for (WebElement goSummary : goSummaryList) {
+                goSummary.click();
+            }
+
+            // 좌석을 다 노출한 후에 좌석을 선택한다. 잔여 좌석 갯수를 보고 사용자가 신청한 좌석이랑 같거나 크면 구역을 선택한다.
+            List<WebElement> listAreaUlLi = melonTicketServiceTest.findCssSelectorList(".list_area ul li");
+            for (WebElement li : listAreaUlLi) {
+                WebElement stringTag = melonTicketServiceTest.findCssSelector("strong");
+                int seatResidual = Integer.parseInt(stringTag.getText());
+                if(seatResidual >= melonInfoTest.getRsrvVolume()){
+                    li.click();
+                    break;
+                }
+            }
+        } catch (Exception e) {
+            System.out.println("구역 선택 없음 " + e);
+        }
+        
+        // 좌석 선택
         melonSeatTest.selectSeat(melonInfoTest);
     }
 
