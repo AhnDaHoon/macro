@@ -27,8 +27,6 @@ public class MelonSeatService {
     }
 
     public void selectSeat(MelonInfo melonInfo){
-        changeFrame();
-
         int rsrvVolume = melonInfo.getRsrvVolume();
 
         List<WebElement> seatList = new ArrayList<>();
@@ -66,7 +64,7 @@ public class MelonSeatService {
 
     public List<Triple> findSeat(){
         String cssSelector = "rect:not([fill='#DDDDDD']):not([fill='none'])";
-        List<WebElement> rectElements = melonTicketService.findMelonRect(cssSelector);
+        List<WebElement> rectElements = melonTicketService.findCssSelectorList(cssSelector);
 
         List<Triple> coordinates = new ArrayList<>();
 
@@ -80,6 +78,8 @@ public class MelonSeatService {
         return coordinates;
     }
 
+    // 1. Y를 정렬한다.
+    // 2. Y의 순서를 지키면서 X도 정렬한다.
     public void sortCoordinates(List<Triple> coordinates){
         Collections.sort(coordinates, new Comparator<Triple>() {
             @Override

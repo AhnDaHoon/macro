@@ -76,7 +76,7 @@ public class ReserveMelonTicketServiceTest{
 
     void settingJavascript(){
         melonInfoTest.setCalendarType(CalendarTypeEnumTest.LIST);
-        melonInfoTest.setProdId("208619");
+        melonInfoTest.setProdId("208640");
         melonInfoTest.setTicketdate("0");
         melonInfoTest.setTicketTime(0);
     }
@@ -463,6 +463,8 @@ public class ReserveMelonTicketServiceTest{
         // 좌석 선택이 아닌 구역 선택이 나왔을 경우
         melonSeatTest.changeFrame();
         try {
+            // 만든 함수를 사용하지 않고 driver를 가져와서 사용하는 이유는 melonTicketService에서 만든 함수는 무한 대기를 해서 box_stage 클래스를 가진 태그가 나오지 않으면 계속 기다리기 때문.
+            // 위에 캡쳐 문자 인식이 끝나면 당연히 좌석 선택이나, 지역 선택이 있을거라고 예상하고 짠 코드임
             WebElement boxStage = driver.findElement(By.className("box_stage"));
             System.out.println("boxStage = " + boxStage);
 
@@ -477,6 +479,7 @@ public class ReserveMelonTicketServiceTest{
             for (WebElement li : listAreaUlLi) {
                 WebElement stringTag = melonTicketServiceTest.findCssSelector("strong");
                 int seatResidual = Integer.parseInt(stringTag.getText());
+                System.out.println("seatResidual = " + seatResidual);
                 if(seatResidual >= melonInfoTest.getRsrvVolume()){
                     li.click();
                     break;

@@ -83,6 +83,8 @@ public class MelonSeatTest {
         return coordinates;
     }
 
+    // 1. Y를 정렬한다.
+    // 2. Y의 순서를 지키면서 X도 정렬한다.
     public void sortCoordinates(List<TripleTest> coordinates){
         Collections.sort(coordinates, new Comparator<TripleTest>() {
             @Override

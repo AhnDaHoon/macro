@@ -175,7 +175,13 @@ public class MelonTicketService {
         return driver.findElements(by);
     }
 
-    public List<WebElement> findMelonRect(String name){
+    public WebElement findCssSelector(String name){
+        By by = By.cssSelector(name);
+        waitElement(by);
+        return driver.findElement(by);
+    }
+
+    public List<WebElement> findCssSelectorList(String name){
         By by = By.cssSelector(name);
         waitElement(by);
         return driver.findElements(by);
@@ -236,8 +242,12 @@ public class MelonTicketService {
         if(result.equals("TesseractException") || result.equals("not exist")){
             return result;
         }
-        return result.substring(0, 6);
 
+        if(result.length() > 6){
+            return result.substring(0, 6);
+        }
+
+        return result;
 
     }
 
