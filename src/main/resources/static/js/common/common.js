@@ -1,8 +1,4 @@
 function ajaxRequest(requestUrl, requestData){
-    console.log(requestUrl)
-    console.log(requestData)
-    console.log(JSON.stringify(requestData))
-
     $.ajax({
         type : "post",
         url : requestUrl,

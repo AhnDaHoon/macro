@@ -1,19 +1,37 @@
 function login(requestUrl){
     let melonLoginForm = $("#melonLoginForm");
     let melonLoginFormInputs = $("#melonLoginForm input");
+
+    isValid = true;
     melonLoginFormInputs.each(function() {
-        !ValidateCheck($(this).val(), $(this).attr('id'))
+        if(!ValidateCheck($(this).val(), $(this).attr('id'))){
+            isValid = false;
+            return isValid;
+        }
     })
+
+    if(!isValid){
+        return isValid;
+    }
 
     ajaxRequest("/melon/login", melonLoginForm.serialize());
 }
 
 function ticketing(requestUrl){
-    let melonLoginForm = $("#melonTicketingForm");
-    let melonLoginFormInputs = $("#melonTicketingForm input");
-    melonLoginFormInputs.each(function() {
-        !ValidateCheck($(this).val(), $(this).attr('id'))
+    let melonTicketingForm = $("#melonTicketingForm");
+    let melonTicketingFormInputs = $("#melonTicketingForm input");
+
+    isValid = true;
+    melonTicketingFormInputs.each(function() {
+        if(!ValidateCheck($(this).val(), $(this).attr('id'))){
+            isValid = false;
+            return isValid;
+        }
     })
 
-    ajaxRequest("/melon/ticketing", melonLoginForm.serialize());
+    if(!isValid){
+        return isValid;
+    }
+
+    ajaxRequest("/melon/ticketing", melonTicketingForm.serialize());
 }
