@@ -8,6 +8,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
+import org.openqa.selenium.ElementNotInteractableException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -358,6 +359,8 @@ public class ReserveMelonTicketServiceTest{
             System.out.println("e = " + e);
         } catch (InterruptedException e) {
             System.out.println("e = " + e);
+        } catch (ElementNotInteractableException e){
+            System.out.println("e = " + e);
         }
 
         melonSeatTest.selectSeat(melonInfoTest);
@@ -408,6 +411,8 @@ public class ReserveMelonTicketServiceTest{
             System.out.println("e = " + e);
         } catch (InterruptedException e) {
             System.out.println("e = " + e);
+        } catch (ElementNotInteractableException e){
+            System.out.println("e = " + e);
         }
 
         melonSeatTest.selectSeat(melonInfoTest);
@@ -443,6 +448,7 @@ public class ReserveMelonTicketServiceTest{
             boolean displayed = errorMessage.isDisplayed();
 
             while (displayed) {
+                // 캡쳐 문자 인식 새로고침 버튼
                 WebElement btnReload = melonTicketServiceTest.findId("btnReload");
                 btnReload.click();
 
@@ -457,6 +463,8 @@ public class ReserveMelonTicketServiceTest{
         } catch (IOException e) {
             System.out.println("e = " + e);
         } catch (InterruptedException e) {
+            System.out.println("e = " + e);
+        } catch (ElementNotInteractableException e){
             System.out.println("e = " + e);
         }
 

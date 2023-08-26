@@ -6,6 +6,7 @@ import com.macro.file.MelonCaptchaService;
 import com.macro.service.MelonSeatService;
 import com.macro.service.MelonTicketService;
 import org.openqa.selenium.By;
+import org.openqa.selenium.ElementNotInteractableException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -77,6 +78,7 @@ public class MelonTicketController {
             boolean displayed = errorMessage.isDisplayed();
 
             while (displayed){
+                // 캡쳐 문자 인식 새로고침 버튼
                 WebElement btnReload = melonTicketService.findId("btnReload");
                 btnReload.click();
 
@@ -91,6 +93,8 @@ public class MelonTicketController {
         } catch (IOException e) {
             System.out.println("e = " + e);
         } catch (InterruptedException e) {
+            System.out.println("e = " + e);
+        } catch (ElementNotInteractableException e){
             System.out.println("e = " + e);
         }
 
