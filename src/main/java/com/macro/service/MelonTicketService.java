@@ -264,4 +264,51 @@ public class MelonTicketService {
         WebElement btnComplete = findId("btnComplete");
         btnComplete.click();
     }
+
+    // 영역 선택 실패하면 true로 while문을 계속 돌림
+    public boolean isSelectAreaNone(MelonInfo melonInfo){
+        // 만든 함수를 사용하지 않고 driver를 가져와서 사용하는 이유는 melonTicketService에서 만든 함수는 무한 대기를 해서 box_stage 클래스를 가진 태그가 나오지 않으면 계속 기다리기 때문.
+        // 위에 캡쳐 문자 인식이 끝나면 당연히 좌석 선택이나, 지역 선택이 있을거라고 예상하고 짠 코드임
+        WebElement boxStage = driver.findElement(By.className("box_stage"));
+        System.out.println("boxStage = " + boxStage);
+
+        // 오른쪽 하단에 좌석 onclick='goSummary' 속성을 가진 tr 태그들을 선택을해 줘야 좌석이 elements에서 조회가 되기 때문에 전부 다 클릭해 준다.
+        List<WebElement> goSummaryList = findCssSelectorList("[onclick*='goSummary']");
+        List<WebElement> areaInfo = findClassList("area_info");
+
+        for (int i = 0; i < goSummaryList.size(); i++) {
+            String areaInfoClass = areaInfo.get(i).getAttribute("class");
+
+            // 지역 보는 리스트가 open이 되어 있지 않으면 클릭함.
+            // open이 되어 있는걸 또 클릭하면 닫기 때문에 추가함
+            if(!areaInfoClass.contains("open")){
+                goSummaryList.get(i).click();
+            }
+        }
+
+        // 좌석을 다 노출한 후에 좌석을 선택한다. 잔여 좌석 갯수를 보고 사용자가 신청한 좌석이랑 같거나 크면 구역을 선택한다.
+        List<WebElement> listAreaUlLi = findCssSelectorList(".list_area ul li");
+        int seatResidual = 0;
+        for (WebElement li : listAreaUlLi) {
+            WebElement stringTag = findCssSelector("strong");
+            seatResidual = Integer.parseInt(stringTag.getText());
+            System.out.println("seatResidual = " + seatResidual);
+            if(seatResidual >= melonInfo.getRsrvVolume()){
+                li.click();
+                break;
+            }
+        }
+
+        if(seatResidual == 0 || seatResidual < melonInfo.getRsrvVolume()){
+            WebElement btnReloadSchedule = findId("btnReloadSchedule");
+            btnReloadSchedule.click();
+            try {
+                Thread.sleep(3000);
+            } catch (InterruptedException e) {
+                System.out.println("e = " + e);
+            }
+            return true;
+        }
+        return false;
+    }
 }

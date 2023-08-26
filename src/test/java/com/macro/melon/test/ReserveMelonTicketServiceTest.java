@@ -77,7 +77,7 @@ public class ReserveMelonTicketServiceTest{
 
     void settingJavascript(){
         melonInfoTest.setCalendarType(CalendarTypeEnumTest.LIST);
-        melonInfoTest.setProdId("208640");
+        melonInfoTest.setProdId("208619");
         melonInfoTest.setTicketdate("0");
         melonInfoTest.setTicketTime(0);
     }
@@ -471,34 +471,21 @@ public class ReserveMelonTicketServiceTest{
         // 좌석 선택이 아닌 구역 선택이 나왔을 경우
         melonSeatTest.changeFrame();
         try {
-            // 만든 함수를 사용하지 않고 driver를 가져와서 사용하는 이유는 melonTicketService에서 만든 함수는 무한 대기를 해서 box_stage 클래스를 가진 태그가 나오지 않으면 계속 기다리기 때문.
-            // 위에 캡쳐 문자 인식이 끝나면 당연히 좌석 선택이나, 지역 선택이 있을거라고 예상하고 짠 코드임
-            WebElement boxStage = driver.findElement(By.className("box_stage"));
-            System.out.println("boxStage = " + boxStage);
-
-            // 오른쪽 하단에 좌석 onclick='goSummary' 속성을 가진 tr 태그들을 선택을해 줘야 좌석이 elements에서 조회가 되기 때문에 전부 다 클릭해 준다.
-            List<WebElement> goSummaryList = melonTicketServiceTest.findCssSelectorList("[onclick*='goSummary']");
-            for (WebElement goSummary : goSummaryList) {
-                goSummary.click();
-            }
-
-            // 좌석을 다 노출한 후에 좌석을 선택한다. 잔여 좌석 갯수를 보고 사용자가 신청한 좌석이랑 같거나 크면 구역을 선택한다.
-            List<WebElement> listAreaUlLi = melonTicketServiceTest.findCssSelectorList(".list_area ul li");
-            for (WebElement li : listAreaUlLi) {
-                WebElement stringTag = melonTicketServiceTest.findCssSelector("strong");
-                int seatResidual = Integer.parseInt(stringTag.getText());
-                System.out.println("seatResidual = " + seatResidual);
-                if(seatResidual >= melonInfoTest.getRsrvVolume()){
-                    li.click();
-                    break;
-                }
+            // 자리가 날 때까지 지역 선택, 새로고침을 반복하려고 만든 변수
+            boolean selectArea = true;
+            while (selectArea){
+                selectArea = melonTicketServiceTest.isSelectAreaNone(melonInfoTest);
             }
         } catch (Exception e) {
             System.out.println("구역 선택 없음 " + e);
         }
-        
+
         // 좌석 선택
-        melonSeatTest.selectSeat(melonInfoTest);
+        try {
+            melonSeatTest.selectSeat(melonInfoTest);
+        } catch (ElementNotInteractableException e){
+            System.out.println("e = " + e);
+        }
     }
 
 
