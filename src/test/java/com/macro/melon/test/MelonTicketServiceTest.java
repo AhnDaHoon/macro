@@ -162,6 +162,18 @@ public class MelonTicketServiceTest {
         return driver.findElements(by);
     }
 
+    public WebElement findName(String name){
+        By by = By.name(name);
+        waitElement(by);
+        return driver.findElement(by);
+    }
+
+    public List<WebElement> findNameList(String name){
+        By by = By.name(name);
+        waitElement(by);
+        return driver.findElements(by);
+    }
+
     public List<WebElement> findTagList(String name){
         By by = By.tagName(name);
         waitElement(by);
@@ -298,7 +310,7 @@ public class MelonTicketServiceTest {
             WebElement btnReloadSchedule = findId("btnReloadSchedule");
             btnReloadSchedule.click();
             try {
-                Thread.sleep(3000);
+                Thread.sleep(melonInfo.getRefreshTime());
             } catch (InterruptedException e) {
                 System.out.println("e = " + e);
             }

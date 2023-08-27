@@ -3,6 +3,7 @@ package com.macro.melon.test;
 import com.macro.melon.config.CalendarTypeEnumTest;
 import com.macro.melon.config.LoginTypeEnumTest;
 import com.macro.melon.test.file.MelonCaptchaTest;
+import com.macro.melon.test.order.OrderService;
 import com.macro.melon.test.seat.MelonSeatTest;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -46,6 +47,8 @@ public class ReserveMelonTicketServiceTest{
 
     MelonCaptchaTest file = new MelonCaptchaTest();
 
+    OrderService orderService;
+
     MelonSeatTest melonSeatTest = null;
 
     MelonInfoTest melonInfoTest;
@@ -77,7 +80,7 @@ public class ReserveMelonTicketServiceTest{
 
     void settingJavascript(){
         melonInfoTest.setCalendarType(CalendarTypeEnumTest.LIST);
-        melonInfoTest.setProdId("208619");
+        melonInfoTest.setProdId("208640");
         melonInfoTest.setTicketdate("0");
         melonInfoTest.setTicketTime(0);
     }
@@ -88,6 +91,7 @@ public class ReserveMelonTicketServiceTest{
         driver = melonTicketServiceTest.getMainDriver();
         wait = melonTicketServiceTest.getWaitDriver();
         melonSeatTest = new MelonSeatTest(melonTicketServiceTest);
+        orderService = new OrderService(melonTicketServiceTest);
         melonInfoTest = MelonInfoTest.builder()
                 .id(id)
                 .pwd(pwd)
@@ -422,7 +426,7 @@ public class ReserveMelonTicketServiceTest{
     void 구역_선택이_나올_경우_구역_먼저_클릭_후_좌석_선택() {
         settingJavascript();
         // 예매할 좌석 갯수
-        melonInfoTest.setRsrvVolume(2);
+        melonInfoTest.setRsrvVolume(1);
         int rsrvVolume = melonInfoTest.getRsrvVolume();
 
         // 로그인
@@ -486,8 +490,8 @@ public class ReserveMelonTicketServiceTest{
         } catch (ElementNotInteractableException e){
             System.out.println("e = " + e);
         }
+
+        orderService.selectPrice(melonInfoTest);
+        orderService.order();
     }
-
-
-
 }

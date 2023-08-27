@@ -68,7 +68,7 @@ public class MelonSeatTest {
     }
 
     public List<TripleTest> findSeat(){
-        String cssSelector = "rect:not([fill='#DDDDDD']):not([fill='none'])";
+        String cssSelector = "#ez_canvas rect:not([fill='#DDDDDD']):not([fill='none'])";
         List<WebElement> rectElements = melonTicketServiceTest.findCssSelectorList(cssSelector);
 
         List<TripleTest> coordinates = new ArrayList<>();
@@ -131,6 +131,7 @@ public class MelonSeatTest {
 
         for (WebElement webElement : seatList) {
             webElement.click();
+            System.out.println("webElement = " + webElement.getAttribute("fill"));
         }
 
         melonTicketServiceTest.findId("nextTicketSelection").click();

@@ -63,7 +63,7 @@ public class MelonSeatService {
     }
 
     public List<Triple> findSeat(){
-        String cssSelector = "rect:not([fill='#DDDDDD']):not([fill='none'])";
+        String cssSelector = "#ez_canvas rect:not([fill='#DDDDDD']):not([fill='none'])";
         List<WebElement> rectElements = melonTicketService.findCssSelectorList(cssSelector);
 
         List<Triple> coordinates = new ArrayList<>();
