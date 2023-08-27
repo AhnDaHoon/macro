@@ -3,12 +3,11 @@ package com.macro.melon.test;
 import com.macro.melon.config.CalendarTypeEnumTest;
 import com.macro.melon.config.LoginTypeEnumTest;
 import com.macro.melon.test.file.MelonCaptchaTest;
-import com.macro.melon.test.order.OrderService;
+import com.macro.melon.test.order.OrderServiceTest;
+import com.macro.melon.test.order.OrderTest;
 import com.macro.melon.test.seat.MelonSeatTest;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.openqa.selenium.By;
 import org.openqa.selenium.ElementNotInteractableException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -19,7 +18,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.PropertySource;
 
 import java.io.IOException;
-import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -47,7 +45,7 @@ public class ReserveMelonTicketServiceTest{
 
     MelonCaptchaTest file = new MelonCaptchaTest();
 
-    OrderService orderService;
+    OrderServiceTest orderService;
 
     MelonSeatTest melonSeatTest = null;
 
@@ -80,7 +78,7 @@ public class ReserveMelonTicketServiceTest{
 
     void settingJavascript(){
         melonInfoTest.setCalendarType(CalendarTypeEnumTest.LIST);
-        melonInfoTest.setProdId("208640");
+        melonInfoTest.setProdId("208510");
         melonInfoTest.setTicketdate("0");
         melonInfoTest.setTicketTime(0);
     }
@@ -91,7 +89,7 @@ public class ReserveMelonTicketServiceTest{
         driver = melonTicketServiceTest.getMainDriver();
         wait = melonTicketServiceTest.getWaitDriver();
         melonSeatTest = new MelonSeatTest(melonTicketServiceTest);
-        orderService = new OrderService(melonTicketServiceTest);
+        orderService = new OrderServiceTest(melonTicketServiceTest);
         melonInfoTest = MelonInfoTest.builder()
                 .id(id)
                 .pwd(pwd)
@@ -490,8 +488,81 @@ public class ReserveMelonTicketServiceTest{
         } catch (ElementNotInteractableException e){
             System.out.println("e = " + e);
         }
+    }
 
+    @Test
+    void 좌석_선택_후_무통장입금_및_모든_결제_완료() {
+        settingJavascript();
+        // 예매할 좌석 갯수
+        melonInfoTest.setRsrvVolume(1);
+        int rsrvVolume = melonInfoTest.getRsrvVolume();
+
+        // 로그인
+        melonTicketServiceTest.melonLogin(melonInfoTest);
+
+        // 페이지 이동
+        melonTicketServiceTest.moveReservePage(melonInfoTest);
+
+        // 날짜 선택
+        // 시간 선택
+        // 예매하기 버튼 클릭
+        melonTicketServiceTest.selectDateAndTimeClick(javascriptCode);
+
+        // 좌석 선택 페이지 대기
+        wait.until(ExpectedConditions.numberOfWindowsToBe(2));
+        melonTicketServiceTest.windowHandler(2);
+        System.out.println("새로운 페이지 감지");
+
+        try {
+            String targetFileName = file.imageDownload(melonTicketServiceTest, folderPath);
+            melonTicketServiceTest.captchaVerification(targetFileName);
+            WebElement errorMessage = melonTicketServiceTest.findId("errorMessage");
+            boolean displayed = errorMessage.isDisplayed();
+
+            while (displayed) {
+                // 캡쳐 문자 인식 새로고침 버튼
+                WebElement btnReload = melonTicketServiceTest.findId("btnReload");
+                btnReload.click();
+
+                // 클릭하고 텀을 주고 이미지를 다운로드 (이렇게 안하면 새로고침 이전 이미지를 다운로드함)
+                Thread.sleep(500);
+                targetFileName = file.imageDownload(melonTicketServiceTest, folderPath);
+
+                System.out.println("targetFileName = " + targetFileName);
+                melonTicketServiceTest.captchaVerification(targetFileName);
+                displayed = errorMessage.isDisplayed();
+            }
+        } catch (IOException e) {
+            System.out.println("e = " + e);
+        } catch (InterruptedException e) {
+            System.out.println("e = " + e);
+        } catch (ElementNotInteractableException e){
+            System.out.println("e = " + e);
+        }
+
+        // 좌석 선택이 아닌 구역 선택이 나왔을 경우
+        melonSeatTest.changeFrame();
+        try {
+            // 자리가 날 때까지 지역 선택, 새로고침을 반복하려고 만든 변수
+            boolean selectArea = true;
+            while (selectArea){
+                selectArea = melonTicketServiceTest.isSelectAreaNone(melonInfoTest);
+            }
+        } catch (Exception e) {
+            System.out.println("구역 선택 없음 " + e);
+        }
+
+        // 좌석 선택
+        try {
+            melonSeatTest.selectSeat(melonInfoTest);
+        } catch (ElementNotInteractableException e){
+            System.out.println("e = " + e);
+        }
+
+        OrderTest order = new OrderTest();
+        order.setMiddlePhoneNumber("1111");
+        order.setLastPhoneNumber("2222");
         orderService.selectPrice(melonInfoTest);
-        orderService.order();
+        orderService.order(order);
     }
 }

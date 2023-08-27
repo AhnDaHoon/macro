@@ -1,18 +1,17 @@
 package com.macro.controller;
-import com.macro.config.CalendarTypeEnum;
 import com.macro.config.LoginTypeEnum;
 import com.macro.dto.MelonInfo;
+import com.macro.dto.Order;
 import com.macro.file.MelonCaptchaService;
 import com.macro.service.MelonSeatService;
 import com.macro.service.MelonTicketService;
-import org.openqa.selenium.By;
+import com.macro.service.OrderService;
 import org.openqa.selenium.ElementNotInteractableException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Wait;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -39,6 +38,9 @@ public class MelonTicketController {
     @Autowired
     private MelonCaptchaService melonCaptchaService;
 
+    @Autowired
+    private OrderService orderService;
+
     @GetMapping("")
     public String melon(){
         return "view/melon/index";
@@ -57,7 +59,7 @@ public class MelonTicketController {
 
     @PostMapping("/ticketing")
     @ResponseBody
-    public String melonTicketing(@ModelAttribute MelonInfo melonInfo){
+    public String melonTicketing(@ModelAttribute MelonInfo melonInfo, @ModelAttribute Order order){
         // 날짜 선택
         // 시간 선택
         // 예매하기 버튼 클릭
@@ -116,6 +118,9 @@ public class MelonTicketController {
         } catch (ElementNotInteractableException e){
             System.out.println("e = " + e);
         }
+
+        orderService.selectPrice(melonInfo);
+        orderService.order(order);
 
         return "티켓팅 끝";
     }

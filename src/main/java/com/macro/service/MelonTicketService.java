@@ -169,6 +169,18 @@ public class MelonTicketService {
         return driver.findElements(by);
     }
 
+    public WebElement findName(String name){
+        By by = By.name(name);
+        waitElement(by);
+        return driver.findElement(by);
+    }
+
+    public List<WebElement> findNameList(String name){
+        By by = By.name(name);
+        waitElement(by);
+        return driver.findElements(by);
+    }
+
     public List<WebElement> findTagList(String name){
         By by = By.tagName(name);
         waitElement(by);
