@@ -23,6 +23,9 @@ public class MelonInfo {
 
     private final String loginUrl = "https://member.melon.com/muid/family/ticket/login/web/login_inform.htm?cpId=WP15&returnPage=https://ticket.melon.com/main/readingGate.htm";
 
+    // 잔여 좌석이 없을 때 사용하는 변수 milliSecond
+    private final int refreshTime = 1500;
+
     // 티켓 id
     private String prodId;
 
@@ -45,5 +48,7 @@ public class MelonInfo {
 
     // 예매할 티켓 갯수
     private int rsrvVolume;
+
+
 
 }

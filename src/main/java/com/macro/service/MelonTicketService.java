@@ -303,7 +303,7 @@ public class MelonTicketService {
             WebElement btnReloadSchedule = findId("btnReloadSchedule");
             btnReloadSchedule.click();
             try {
-                Thread.sleep(3000);
+                Thread.sleep(melonInfo.getRefreshTime());
             } catch (InterruptedException e) {
                 System.out.println("e = " + e);
             }
