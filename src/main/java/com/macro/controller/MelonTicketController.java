@@ -2,7 +2,7 @@ package com.macro.controller;
 import com.macro.config.LoginTypeEnum;
 import com.macro.dto.MelonInfo;
 import com.macro.dto.Order;
-import com.macro.file.MelonCaptchaService;
+import com.macro.service.MelonCaptchaService;
 import com.macro.service.MelonSeatService;
 import com.macro.service.MelonTicketService;
 import com.macro.service.OrderService;
@@ -17,7 +17,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.util.List;
 
 @Controller
 @RequestMapping("/melon")
